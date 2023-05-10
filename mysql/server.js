@@ -1,9 +1,11 @@
 //constants
 const express = require('express');
 const bodyParser = require('body-parser');
+var cors = require('cors') //CORS policy: No 'Access-Control-Allow-Origin' h 
 const mysql = require('mysql')
 const server = express()
 server.use(bodyParser.json()) 
+server.use(cors()) //CORS policy: No 'Access-Control-Allow-Origin' h
 
 //establish db conn
 const conn = mysql.createConnection({
@@ -30,6 +32,96 @@ server.listen(8080, function check( err) {
         console.log("Started...")
     }
 })
+
+
+//DASHBOARD VALUES
+//counting items in tables => emp, user, units, promotions
+server.get("/api/count/users", (req, res) => { //users
+    let sql = "SELECT count(*) as count FROM users_table"
+    conn.query(sql, function(err, results){
+        if(err){
+            console.log("Oops! Error Fetching Users")
+        }else{
+            res.send({status: true, data: results})
+        }
+    })
+})
+server.get("/api/count/emps", (req, res) => { //employees
+    let sql = "SELECT count(*) as count FROM emp_table"
+    conn.query(sql, function(err, results){
+        if(err){
+            console.log("Oops! Error Fetching Employees")
+        }else{
+            res.send({status: true, data: results})
+        }
+    })
+})
+server.get("/api/count/units", (req, res) => { //units
+    let sql = "SELECT count(*) as count FROM units_table"
+    conn.query(sql, function(err, results){
+        if(err){
+            console.log("Oops! Error Fetching Units")
+        }else{
+            res.send({status: true, data: results})
+        }
+    })
+})
+server.get("/api/count/exits", (req, res) => { //exits
+    let sql = "SELECT count(*) as count FROM exits_table"
+    conn.query(sql, function(err, results){
+        if(err){
+            console.log("Oops! Error Fetching Exits")
+        }else{
+            res.send({status: true, data: results})
+        }
+    })
+})
+
+
+//EMPLOYEES
+//Employees data table
+server.get("/api/employees", (req, res) => {
+    let sql = "SELECT `id`,`emp_id`,concat(`emp_firstname`, ' ',`emp_middlename`, ' ',`emp_surname`) as 'name',`emp_gender`,`emp_dob`,`emp_email`,`emp_currentgrade`,`emp_dateoffirstappointment`,`emp_dateofpresentappointment`,`emp_highestqualification`,`emp_staffstatus`,`emp_yearswithministry`,`emp_maritalstatus`,`emp_phoneno`,`photo`, (select name from units_table WHERE unit_id = emp.unit_id) as Unit FROM `emp_table` emp;"
+    conn.query(sql, function(err, results){
+        if(err){
+            console.log("Oops! Error Fetching Employees")
+        }else{
+            res.send({status: true, data: results})
+        }
+    })
+})
+//add new employee
+server.post("/api/employees/add", (req, res) => {
+    let {emp_id, emp_surname, emp_firstname, emp_middlename, emp_gender, emp_dob, emp_email, emp_highestqualification, emp_staffstatus, emp_yearswithministry, emp_maritalstatus, emp_phoneno, photo, unit_id} = req.body
+
+    let sql = "INSERT INTO emp_table (emp_id, emp_surname, emp_firstname, emp_middlename, emp_gender, emp_dob, emp_email, emp_highestqualification, emp_staffstatus, emp_yearswithministry, emp_maritalstatus, emp_phoneno, photo, unit_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?) " 
+    conn.query(sql, [emp_id, emp_surname, emp_firstname, emp_middlename, emp_gender, emp_dob, emp_email, emp_highestqualification, emp_staffstatus, emp_yearswithministry, emp_maritalstatus, emp_phoneno, photo, unit_id], (err, results) => {
+        if(err){
+            res.send({status: false, message: "Oops! Error occured, unable to add employee"})
+        }else{
+            res.send({status: true, message: "New Employee added Successfully"})
+        }
+    })
+})
+
+
+//UNITS
+//Add Employee modal
+server.get("/api/units", (req, res) => {
+    let sql = "SELECT * FROM `units_table`;"
+    conn.query(sql, function(err, results){
+        if(err){
+            console.log("Oops! Error Fetching Units")
+        }else{
+            res.send({status: true, data: results})
+        }
+    })
+})
+
+
+
+
+
 
 
 //view records
