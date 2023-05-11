@@ -39,7 +39,7 @@
                                     <tr *ngFor="let emp of empDetails; let i = index">
                                         <td>{{i +1 }}</td>
                                         <td>
-                                            <img *ngIf="emp.photo != ''" src='assets/img/{{emp.photo}}' height="90px">
+                                            <img *ngIf="emp.photo != '' " src='assets/img/{{emp.photo}}' height="90px">
                                             <img *ngIf="emp.photo == ''" src='assets/img/dummy.png' height="90px">
                                         </td>
                                         <td>{{emp.emp_id}}</td>

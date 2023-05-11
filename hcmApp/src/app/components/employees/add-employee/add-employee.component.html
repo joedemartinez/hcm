@@ -110,7 +110,7 @@
                     <option *ngFor="let unit of unitList;" value="{{unit.unit_id}}">{{unit.Name}}</option>
                 </select>
             </div>
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-3">
                 <label for="photo">Photo</label>
                 <div class="input-group">
                     <div class="custom-file">
@@ -118,9 +118,14 @@
                         <label class="custom-file-label" for="photo">{{imageName}}</label>
                     </div>
                 </div>
-                <!-- <input type="date" class="form-control" placeholder="Enter hire date" formControlName="hire_date"
-                    required
-                    [ngClass]="{'is-invalid' : addEmp.controls['hire_date'].invalid && addEmp.controls['hire_date'].touched }"> -->
+            </div>
+            <div class="form-group col-md-3">
+                <label for="photo"></label>
+                <div class="input-group">
+                    <div class="custom-file">
+                        <img [src]="url" height="90px">
+                    </div>
+                </div>
             </div>
         </div>
     </div>

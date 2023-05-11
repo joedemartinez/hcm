@@ -15,7 +15,8 @@ export class AddEmployeeComponent {
   //form group
   addEmp!: FormGroup;
   unitList: any
-  imageName!: any
+  imageName: any = 'dummy.png'
+  url: any = 'assets/img/dummy.png'
 
 
   constructor (private fb: FormBuilder, 
@@ -29,19 +30,33 @@ export class AddEmployeeComponent {
     //NEW EMPLOYEE MODAL
     //set validations
     this.addEmp = this.fb.group({
-      emp_id: ['', [Validators.required]],
-      emp_email: ['', [Validators.required, Validators.email]],
-      emp_firstname: ['', [Validators.required]],
-      emp_middlename: ['', [Validators.required]],
-      emp_surname: ['', [Validators.required]],
-      emp_gender: ['', [Validators.required]],
-      emp_dob: ['', [Validators.required]],
-      emp_maritalstatus: ['', [Validators.required]],
-      emp_phoneno: ['', [Validators.required]],
-      emp_highestqualification: ['', [Validators.required]],
-      emp_staffstatus: ['', [Validators.required]],
-      emp_yearswithministry: ['', [Validators.required]],
-      unit_id: ['', [Validators.required]],
+      // emp_id: ['', [Validators.required]],
+      // emp_email: ['', [Validators.required, Validators.email]],
+      // emp_firstname: ['', [Validators.required]],
+      // emp_middlename: ['', [Validators.required]],
+      // emp_surname: ['', [Validators.required]],
+      // emp_gender: ['', [Validators.required]],
+      // emp_dob: ['', [Validators.required]],
+      // emp_maritalstatus: ['', [Validators.required]],
+      // emp_phoneno: ['', [Validators.required]],
+      // emp_highestqualification: ['', [Validators.required]],
+      // emp_staffstatus: ['', [Validators.required]],
+      // emp_yearswithministry: ['', [Validators.required]],
+      // unit_id: ['', [Validators.required]],
+      // photo: ['']
+      emp_id: [''],
+      emp_email: [''],
+      emp_firstname: [''],
+      emp_middlename: [''],
+      emp_surname: [''],
+      emp_gender: [''],
+      emp_dob: [''],
+      emp_maritalstatus: [''],
+      emp_phoneno: [''],
+      emp_highestqualification: [''],
+      emp_staffstatus: [''],
+      emp_yearswithministry: [''],
+      unit_id: [''],
       photo: ['']
     })
 
@@ -84,8 +99,6 @@ export class AddEmployeeComponent {
           );
       }
     })
-    //this.closeModal()
-    // 
     
   }
 
@@ -97,6 +110,14 @@ export class AddEmployeeComponent {
 
   onFileSelected(event:any) {
     this.imageName = event.target.files[0].name;
+
+    if(event.target.files[0]){
+      let reader = new FileReader()
+      reader.readAsDataURL(event.target.files[0])
+      reader.onload = (event: any) => {
+        this.url = event.target.result
+      }
+    }
   }
 
   closeModal(){
