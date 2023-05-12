@@ -25,38 +25,23 @@ export class AddEmployeeComponent {
     private http: HttpClient,
     private toastr: ToastrService) {
     
-      this.toastr.warning('Oops!! Error Occured', 'Error!');
 
     //NEW EMPLOYEE MODAL
     //set validations
     this.addEmp = this.fb.group({
-      // emp_id: ['', [Validators.required]],
-      // emp_email: ['', [Validators.required, Validators.email]],
-      // emp_firstname: ['', [Validators.required]],
-      // emp_middlename: ['', [Validators.required]],
-      // emp_surname: ['', [Validators.required]],
-      // emp_gender: ['', [Validators.required]],
-      // emp_dob: ['', [Validators.required]],
-      // emp_maritalstatus: ['', [Validators.required]],
-      // emp_phoneno: ['', [Validators.required]],
-      // emp_highestqualification: ['', [Validators.required]],
-      // emp_staffstatus: ['', [Validators.required]],
-      // emp_yearswithministry: ['', [Validators.required]],
-      // unit_id: ['', [Validators.required]],
-      // photo: ['']
-      emp_id: [''],
-      emp_email: [''],
-      emp_firstname: [''],
-      emp_middlename: [''],
-      emp_surname: [''],
-      emp_gender: [''],
-      emp_dob: [''],
-      emp_maritalstatus: [''],
-      emp_phoneno: [''],
-      emp_highestqualification: [''],
-      emp_staffstatus: [''],
-      emp_yearswithministry: [''],
-      unit_id: [''],
+      emp_id: ['', [Validators.required]],
+      emp_email: ['', [Validators.required, Validators.email]],
+      emp_firstname: ['', [Validators.required]],
+      emp_middlename: ['', [Validators.required]],
+      emp_surname: ['', [Validators.required]],
+      emp_gender: ['', [Validators.required]],
+      emp_dob: ['', [Validators.required]],
+      emp_maritalstatus: ['', [Validators.required]],
+      emp_phoneno: ['', [Validators.required]],
+      emp_highestqualification: ['', [Validators.required]],
+      emp_staffstatus: ['', [Validators.required]],
+      emp_yearswithministry: ['', [Validators.required]],
+      unit_id: ['', [Validators.required]],
       photo: ['']
     })
 
@@ -64,20 +49,10 @@ export class AddEmployeeComponent {
   }
 
   ngOnInit():void{
-    this.getUnitList()
+    this.getEmpList()
   }
 
   submitForm(){
-    // this.empService.submitForm(this.addEmp)
-    //check if edit or save modal
-    // if (this.id) { //edit
-    //   this.empService.updateEmpDetail(this.id, this.addEmp.value)
-    //   this.closeModal()
-    // } else { // save
-    //   this.empService.submitForm(this.addEmp)
-    //   this.closeModal()
-    // }
-
     //set values
     this.addEmp.value.photo = this.imageName
 
@@ -102,8 +77,8 @@ export class AddEmployeeComponent {
     
   }
 
-  getUnitList(){
-    this.http.get("http://localhost:8080/api/units").subscribe((results: any) => {
+  getEmpList(){
+    this.http.get("http://localhost:8080/api/employees").subscribe((results: any) => {
       this.unitList =  results.data
     })
   }

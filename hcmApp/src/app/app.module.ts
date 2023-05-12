@@ -17,6 +17,8 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { BreadcrumbComponent } from './components/layout/breadcrumb/breadcrumb.component';
 import { EmployeesComponent } from './components/employees/employees.component';
 import { AddEmployeeComponent } from './components/employees/add-employee/add-employee.component';
+import { PostingsComponent } from './components/postings/postings.component';
+import { AddPostingComponent } from './components/postings/add-posting/add-posting.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,9 @@ import { AddEmployeeComponent } from './components/employees/add-employee/add-em
     DashboardComponent,
     BreadcrumbComponent,
     EmployeesComponent,
-    AddEmployeeComponent
+    AddEmployeeComponent,
+    PostingsComponent,
+    AddPostingComponent
   ],
   imports: [
     BrowserModule,

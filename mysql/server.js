@@ -120,6 +120,20 @@ server.get("/api/units", (req, res) => {
 
 
 
+//POSTINGS
+//view records
+server.get("/api/postings", (req, res) => {
+    let sql = "SELECT *, (Select concat(emp_firstname, ' ', emp_middlename, ' ', emp_surname) from emp_table  where emp_id = pt.emp_id)as name FROM `postings_table` pt"
+    conn.query(sql, function(err, results){
+        if(err){
+            console.log("Oops! Error Fetching Postings")
+        }else{
+            res.send({status: true, data: results})
+        }
+    })
+})
+
+
 
 
 
