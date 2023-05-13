@@ -5,7 +5,8 @@ var cors = require('cors') //CORS policy: No 'Access-Control-Allow-Origin' h
 const mysql = require('mysql')
 const server = express()
 server.use(bodyParser.json()) 
-server.use(cors()) //CORS policy: No 'Access-Control-Allow-Origin' h
+server.use(cors()) //CORS policy: No 'Access-Control-Allow-Origin' 
+const bcrypt = require('bcryptjs'); //password hashing
 
 //establish db conn
 const conn = mysql.createConnection({
@@ -106,14 +107,27 @@ server.post("/api/employees/add", (req, res) => {
 
 
 //UNITS
-//Add Employee modal
+
 server.get("/api/units", (req, res) => {
-    let sql = "SELECT * FROM `units_table`;"
+    let sql = "SELECT *, (select count(*) from emp_table where unit_id = ut.unit_id) as unitNumber FROM `units_table` ut"
     conn.query(sql, function(err, results){
         if(err){
             console.log("Oops! Error Fetching Units")
         }else{
             res.send({status: true, data: results})
+        }
+    })
+})
+//add new unit
+server.post("/api/units/add", (req, res) => {
+    let {Name} = req.body
+
+    let sql = "INSERT INTO units_table (Name) VALUES (?) " 
+    conn.query(sql, [Name], (err, results) => {
+        if(err){
+            res.send({status: false, message: "Oops! Error occured, unable to add unit"})
+        }else{
+            res.send({status: true, message: "New Unit added Successfully"})
         }
     })
 })
@@ -132,15 +146,77 @@ server.get("/api/postings", (req, res) => {
         }
     })
 })
+//add new posting
+server.post("/api/postings/add", (req, res) => {
+    let {emp_id, post_from, post_to, region, effectiveDate, releaseDate, assumptionDate} = req.body
+    let sql = "INSERT INTO postings_table (emp_id, post_from, post_to, region, effectiveDate, releaseDate, assumptionDate) VALUES (?,?,?,?,?,?,?) " 
+    conn.query(sql, [emp_id, post_from, post_to, region, effectiveDate, releaseDate, assumptionDate], (err, results) => {
+        if(err){
+            res.send({status: false, message: "Oops! Error occured, unable to add posting"})
+        }else{
+            res.send({status: true, message: "New Posting added Successfully"})
+        }
+    })
+})
+
+
+
+
+//PROMOTIONS
+//view records
+server.get("/api/promotions", (req, res) => {
+    let sql = "SELECT *, (Select concat(emp_firstname, ' ', emp_middlename, ' ', emp_surname) from emp_table where emp_id = pt.emp_id) as name FROM `promotions_table` pt"
+    conn.query(sql, function(err, results){
+        if(err){
+            console.log("Oops! Error Fetching Postings")
+        }else{
+            res.send({status: true, data: results})
+        }
+    })
+})
+
+
+
+
+//PROMOTION HISTORY
+//search Promotion
+server.get("/api/promtionsHistory/", (req, res) => {
+    let emp_id = req.params.id;
+    let sql = "SELECT * FROM promotion_history";
+    conn.query(sql, (err, results) => {
+        if(err){
+            console.log("Oops! Error occured, promotions not found")
+        }else{
+            res.send({status: true, data: results})
+        }
+    })
+})
 
 
 
 
 
 
+//USERS
 //view records
 server.get("/api/users", (req, res) => {
-    let sql = "SELECT * FROM users_table"
+    let sql = "SELECT *, (Select concat(emp_firstname, ' ', emp_middlename, ' ', emp_surname) from emp_table where emp_id = ut.emp_id) as name FROM users_table ut"
+    conn.query(sql, function(err, results){
+        if(err){
+            console.log("Oops! Error Fetching Users")
+        }else{
+            res.send({status: true, data: results})
+        }
+    })
+
+    // const password_hash =bcrypt.hashSync('dummy', 10); //hashing
+    // console.log(password_hash);
+    // const verified = bcrypt.compareSync('dummy', password_hash); // comparing already existing
+})
+
+//Users modal employee list
+server.get("/api/usersList", (req, res) => {
+    let sql = "SELECT emp_id, concat(emp_firstname, ' ', emp_middlename, ' ', emp_surname) as name FROM `emp_table` et where et.emp_id NOT IN (select ut.emp_id from users_table ut)"
     conn.query(sql, function(err, results){
         if(err){
             console.log("Oops! Error Fetching Users")
@@ -152,11 +228,11 @@ server.get("/api/users", (req, res) => {
 
 //insert data
 server.post("/api/users/add", (req, res) => {
-    let {emp_id, password, user_type, status, CreatedBy} = req.body
+    let {emp_id, password, user_type} = req.body
+    password = bcrypt.hashSync(password, 10)
 
-
-    let sql = "INSERT INTO users_table (emp_id, password, user_type, status, CreatedBy) VALUES (?,?,?,?,?) " 
-    conn.query(sql, [emp_id, password, user_type, status, CreatedBy], (err, results) => {
+    let sql = "INSERT INTO users_table (emp_id, password, user_type) VALUES (?,?,?) " 
+    conn.query(sql, [emp_id, password, user_type], (err, results) => {
         if(err){
             res.send({status: false, message: "Oops! Error occured, user not created"})
         }else{
@@ -164,6 +240,9 @@ server.post("/api/users/add", (req, res) => {
         }
     })
 })
+
+
+
 
 //search records
 server.get("/api/users/:id", (req, res) => {
@@ -178,7 +257,6 @@ server.get("/api/users/:id", (req, res) => {
         }
     })
 })
-
 
 //update records
 server.put("/api/users/update/:id", (req, res) => {

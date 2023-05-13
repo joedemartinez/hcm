@@ -32,41 +32,32 @@
         </div>
 
         <div class=" row col-md-12">
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-6">
                 <label for="region">Region </label>
-                <input type="email" class="form-control" placeholder="Enter email address" formControlName="emp_email"
+                <input type="text" class="form-control" placeholder="Enter Region" formControlName="region"
                     required
-                    [ngClass]="{'is-invalid' : addPosting.controls['emp_email'].invalid && addPosting.controls['emp_email'].touched }">
+                    [ngClass]="{'is-invalid' : addPosting.controls['region'].invalid && addPosting.controls['region'].touched }">
             </div>
-            <div class="form-group col-md-4">
-                <label for="phoneno">Phone No</label>
-                <input type="text" class="form-control" placeholder="Enter Phone No" formControlName="emp_phoneno"
+            <div class="form-group col-md-6">
+                <label for="effectiveDate">Effective Date</label>
+                <input type="date" class="form-control" placeholder="Enter Effective Date" formControlName="effectiveDate"
                     required
-                    [ngClass]="{'is-invalid' : addPosting.controls['emp_phoneno'].invalid && addPosting.controls['emp_phoneno'].touched }">
+                    [ngClass]="{'is-invalid' : addPosting.controls['effectiveDate'].invalid && addPosting.controls['effectiveDate'].touched }">
             </div>
         </div>
 
         <div class=" row col-md-12">
-            <div class="form-group col-md-4">
-                <label for="Qualification">Highest Qualification</label>
-                <input type="text" class="form-control" placeholder="Enter Highest Qualification" formControlName="emp_highestqualification"
+            <div class="form-group col-md-6">
+                <label for="releaseDate">Release Date</label>
+                <input type="date" class="form-control" placeholder="Enter Release Date" formControlName="releaseDate"
                     required
-                    [ngClass]="{'is-invalid' : addPosting.controls['emp_highestqualification'].invalid && addPosting.controls['emp_highestqualification'].touched }">
+                    [ngClass]="{'is-invalid' : addPosting.controls['releaseDate'].invalid && addPosting.controls['releaseDate'].touched }">
             </div>
-            <div class="form-group col-md-4">
-                <label for="staff level">Staff Level</label>
-                <select  class="form-control" formControlName="emp_staffstatus" required
-                    [ngClass]="{'is-invalid' : addPosting.controls['emp_staffstatus'].invalid && addPosting.controls['emp_staffstatus'].touched }">
-                    <option value="" selected disabled>Select Option</option>
-                    <option value="Senior Staff" >Senior Staff</option>
-                    <option value="Junior Staff" >Junior Staff</option>
-                </select>
-            </div>
-            <div class="form-group col-md-4">
-                <label for="emp_yearswithministry">Years with Ministry</label>
-                <input type="number" class="form-control" placeholder="Enter Years with Ministry" formControlName="emp_yearswithministry"
+            <div class="form-group col-md-6">
+                <label for="assumptionDate">Assumption Date</label>
+                <input type="date" class="form-control" placeholder="Enter Assumption Date" formControlName="assumptionDate"
                     required
-                    [ngClass]="{'is-invalid' : addPosting.controls['emp_yearswithministry'].invalid && addPosting.controls['emp_yearswithministry'].touched }">
+                    [ngClass]="{'is-invalid' : addPosting.controls['assumptionDate'].invalid && addPosting.controls['assumptionDate'].touched }">
             </div>
         </div>
     </div>

@@ -6,5 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./menu-bar.component.css']
 })
 export class MenuBarComponent {
+  date = new Date()
+  todayDate:String =this.date.toUTCString()
 
 }

@@ -19,6 +19,12 @@ import { EmployeesComponent } from './components/employees/employees.component';
 import { AddEmployeeComponent } from './components/employees/add-employee/add-employee.component';
 import { PostingsComponent } from './components/postings/postings.component';
 import { AddPostingComponent } from './components/postings/add-posting/add-posting.component';
+import { PromotionsComponent } from './components/promotions/promotions.component';
+import { AddPromotionComponent } from './components/promotions/add-promotion/add-promotion.component';
+import { UnitsComponent } from './components/units/units.component';
+import { AddUnitComponent } from './components/units/add-unit/add-unit.component';
+import { UsersComponent } from './components/users/users.component';
+import { AddUserComponent } from './components/users/add-user/add-user.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +37,13 @@ import { AddPostingComponent } from './components/postings/add-posting/add-posti
     EmployeesComponent,
     AddEmployeeComponent,
     PostingsComponent,
-    AddPostingComponent
+    AddPostingComponent,
+    PromotionsComponent,
+    AddPromotionComponent,
+    UnitsComponent,
+    AddUnitComponent,
+    UsersComponent,
+    AddUserComponent
   ],
   imports: [
     BrowserModule,

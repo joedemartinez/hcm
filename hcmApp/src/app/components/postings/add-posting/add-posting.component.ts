@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -25,21 +25,13 @@ export class AddPostingComponent {
     //NEW POSTING MODAL
     //set validations
     this.addPosting = this.fb.group({
-      // emp_id: ['', [Validators.required]],
-      // emp_email: ['', [Validators.required, Validators.email]],
-      // emp_firstname: ['', [Validators.required]],
-      // emp_middlename: ['', [Validators.required]],
-      // emp_surname: ['', [Validators.required]],
-      // emp_gender: ['', [Validators.required]],
-      // emp_dob: ['', [Validators.required]],
-      // emp_maritalstatus: ['', [Validators.required]],
-      // emp_phoneno: ['', [Validators.required]],
-      // emp_highestqualification: ['', [Validators.required]],
-      // emp_staffstatus: ['', [Validators.required]],
-      // emp_yearswithministry: ['', [Validators.required]],
-      // unit_id: ['', [Validators.required]],
-      // photo: ['']
-
+      emp_id: ['', [Validators.required]],
+      post_from: ['', [Validators.required]],
+      post_to: ['', [Validators.required]],
+      region: ['', [Validators.required]],
+      effectiveDate: ['', [Validators.required]],
+      releaseDate: ['', [Validators.required]],
+      assumptionDate: ['', [Validators.required]]
     })
 
 
@@ -52,22 +44,21 @@ export class AddPostingComponent {
   submitForm(){
 
     //make http post request
-    this.http.post("http://localhost:8080/api/employees/add", this.addPosting.value).subscribe((results: any) => {
-      console.log(results.status)
+    this.http.post("http://localhost:8080/api/postings/add", this.addPosting.value).subscribe((results: any) => {
+  
       if(results.status){
-        this.toastr.success('Employee Added Successfully', 'Success!');
-          // this.router.navigate(['/manage-employees'])
+        this.toastr.success('Posting Added Successfully', 'Success!');
           this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
               this.router.navigate(['/postings'])
           );
-          this.closeModal()
       }else{
         this.toastr.warning('Oops!! Error Occured', 'Error!');
-          // this.router.navigate(['/manage-employees'])
           this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
               this.router.navigate(['/postings'])
           );
       }
+
+      this.closeModal()
     })
     
   }
@@ -81,6 +72,6 @@ export class AddPostingComponent {
 
   closeModal(){
     this.modal.dismissAll();
-    this.router.navigate(['/employees'])
+    this.router.navigate(['/postings'])
   }
 }

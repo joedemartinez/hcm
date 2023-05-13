@@ -49,7 +49,7 @@ export class AddEmployeeComponent {
   }
 
   ngOnInit():void{
-    this.getEmpList()
+    this.getUnitList()
   }
 
   submitForm(){
@@ -65,7 +65,6 @@ export class AddEmployeeComponent {
           this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
               this.router.navigate(['/employees'])
           );
-          this.closeModal()
       }else{
         this.toastr.warning('Oops!! Error Occured', 'Error!');
           // this.router.navigate(['/manage-employees'])
@@ -73,13 +72,16 @@ export class AddEmployeeComponent {
               this.router.navigate(['/employees'])
           );
       }
+
+      this.closeModal()
     })
     
   }
 
-  getEmpList(){
-    this.http.get("http://localhost:8080/api/employees").subscribe((results: any) => {
+  getUnitList(){
+    this.http.get("http://localhost:8080/api/units").subscribe((results: any) => {
       this.unitList =  results.data
+      console.log(this.unitList)
     })
   }
 
