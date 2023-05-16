@@ -44,7 +44,7 @@ export class AddUserComponent {
 
       if(results.status){
         this.toastr.success('User Added Successfully', 'Success!');
-          this.router.navigateByUrl('/users', {skipLocationChange: true}).then(() =>
+          this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
               this.router.navigate(['/users'])
           );
       }else{
@@ -68,6 +68,9 @@ export class AddUserComponent {
 
   closeModal(){
     this.modal.dismissAll();
-    this.router.navigate(['/users'])
+    // this.router.navigate(['/users'])
+    // this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
+    //     this.router.navigate(['/users'])
+    // );
   }
 }

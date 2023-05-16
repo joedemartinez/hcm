@@ -4,6 +4,7 @@ import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddEmployeeComponent } from './add-employee/add-employee.component';
 import { ToastrService } from 'ngx-toastr';
+import { ActivatedRoute, Router } from '@angular/router';
 
  
 @Component({
@@ -18,10 +19,10 @@ export class EmployeesComponent {
   
   constructor ( private breadcrumb: BreadcrumbService, private toastr: ToastrService,
     private http: HttpClient,
-    private modal: NgbModal) {
+    private modal: NgbModal,
+    private router: Router,
+    private route: ActivatedRoute) {
    
-    this.toastr.warning('Oops!! Error Occured', 'Error!');
-
     this.breadcrumb.setPageDetails('Employees','Employees','/employees','')//breadcrumb values
 
     this.getEmpVal();//get total employees
@@ -73,5 +74,9 @@ export class EmployeesComponent {
   //open modal
   openModal(){
     this.modal.open(AddEmployeeComponent, { backdrop: false, size: 'lg' })
+  }
+
+  editMode(){
+    this.router.navigateByUrl('/manageEmployees')
   }
 }

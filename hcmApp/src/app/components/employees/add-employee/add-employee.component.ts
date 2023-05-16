@@ -56,7 +56,7 @@ export class AddEmployeeComponent {
     //set values
     this.addEmp.value.photo = this.imageName
 
-    //make http post request
+    // make http post request
     this.http.post("http://localhost:8080/api/employees/add", this.addEmp.value).subscribe((results: any) => {
       console.log(results.status)
       if(results.status){
@@ -72,9 +72,9 @@ export class AddEmployeeComponent {
               this.router.navigate(['/employees'])
           );
       }
-
-      this.closeModal()
     })
+
+    this.closeModal()
     
   }
 
@@ -99,7 +99,10 @@ export class AddEmployeeComponent {
 
   closeModal(){
     this.modal.dismissAll();
-    this.router.navigate(['/employees'])
+    // this.router.navigate(['/employees'])
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
+        this.router.navigate(['/employees'])
+    );
   }
 
 }

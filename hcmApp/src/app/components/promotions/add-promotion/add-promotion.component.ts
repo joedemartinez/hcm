@@ -57,21 +57,22 @@ export class AddPromotionComponent {
               this.router.navigate(['/promotions'])
           );
       }
-
-      this.closeModal()
     })
-    
+    this.modal.dismissAll();
   }
 
   getEmpList(){
     this.http.get("http://localhost:8080/api/employees").subscribe((results: any) => {
       this.empList =  results.data
-      console.log(this.empList)
+      // console.log(this.empList)
     })
   }
 
   closeModal(){
     this.modal.dismissAll();
-    this.router.navigate(['/promotions'])
+    // this.router.navigate(['/promotions'])
+    // this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
+    //     this.router.navigate(['/promotions'])
+    // );
   }
 }

@@ -1,17 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
-import { AddUnitComponent } from './add-unit/add-unit.component';
+import { AddUnitComponent } from '../add-unit/add-unit.component';
 
 @Component({
-  selector: 'app-units',
-  templateUrl: './units.component.html',
-  styleUrls: ['./units.component.css']
+  selector: 'app-manage-units',
+  templateUrl: './manage-units.component.html',
+  styleUrls: ['./manage-units.component.css']
 })
-export class UnitsComponent {
+export class ManageUnitsComponent {
   units: any
   unitsDetails: any
   unitsHistory:any
@@ -20,9 +20,10 @@ export class UnitsComponent {
   constructor ( private breadcrumb: BreadcrumbService, private toastr: ToastrService,
     private http: HttpClient,
     private modal: NgbModal,
+    private route: ActivatedRoute,
     private router: Router) {
 
-    this.breadcrumb.setPageDetails('Units','Units','/unit','')//breadcrumb values
+    this.breadcrumb.setPageDetails('Manage Units','Units','/unit','Manage Units')//breadcrumb values
 
     this.getUnitDetails();//get unit details
 
@@ -59,11 +60,35 @@ export class UnitsComponent {
   }
 
   //open modal
-  openModal(){
+  editUnit(){
     this.modal.open(AddUnitComponent, { backdrop: false, size: 'sm' })
   }
 
-  editMode(){
-    this.router.navigate(['/manageUnits'])
+  deleteUnit(id:any){
+    const proceed = confirm('Are you sure you want to delete this unit?');
+
+
+    if(proceed){
+      // console.log(id)
+      //make http post request
+      this.http.delete("http://localhost:8080/api/units/delete/"+id).subscribe((results: any) => {
+
+        if(results.status){
+          this.toastr.success('Unit Deleted Successfully', 'Success!');
+            this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
+                this.router.navigate(['/manageUnits'])
+            );
+        }else{
+          this.toastr.warning('Oops!! Error Occured', 'Error!');
+            this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
+                this.router.navigate(['/manageUnits'])
+            );
+        }
+      })
+    }
+
+    // this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
+    //     this.router.navigate(['/manageUsers'])
+    // );
   }
 }

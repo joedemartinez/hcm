@@ -19,8 +19,6 @@ export class PromotionsComponent {
   constructor ( private breadcrumb: BreadcrumbService, private toastr: ToastrService,
     private http: HttpClient,
     private modal: NgbModal) {
-   
-    this.toastr.warning('Oops!! Error Occured', 'Error!');
 
     this.breadcrumb.setPageDetails('Promotions','Promotions','/promotions','')//breadcrumb values
 
@@ -33,6 +31,7 @@ export class PromotionsComponent {
     //promotions
     this.http.get("http://localhost:8080/api/promotions").subscribe((results: any) => {
       this.promotionDetails =  results.data
+      // console.log(this.promotionDetails)
       setTimeout(()=>{
         $('#promotionsDataTable').DataTable( {
           pagingType: 'simple_numbers',
@@ -52,6 +51,7 @@ export class PromotionsComponent {
     //promotions history
     this.http.get("http://localhost:8080/api/promtionsHistory").subscribe((results: any) => {
       this.promotionHistory =  results.data
+      // console.log(this.promotionHistory)
     })
   }
 

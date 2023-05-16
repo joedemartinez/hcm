@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
@@ -18,14 +19,13 @@ export class UsersComponent {
   
   constructor ( private breadcrumb: BreadcrumbService, private toastr: ToastrService,
     private http: HttpClient,
-    private modal: NgbModal) {
-   
-    this.toastr.warning('Oops!! Error Occured', 'Error!');
+    private modal: NgbModal,
+    private router: Router) {
 
     this.breadcrumb.setPageDetails('Users','Users','/users','')//breadcrumb values
 
     this.getUsersDetails();//get Users details
-    this.getEmpList() //history
+    this.getEmpList() //
 
   }
 
@@ -49,7 +49,7 @@ export class UsersComponent {
   }
 
   getEmpList(){
-    //users history
+    //users 
     this.http.get("http://localhost:8080/api/employees").subscribe((results: any) => {
       this.empList =  results.data
       
@@ -70,5 +70,10 @@ export class UsersComponent {
   //open modal
   openModal(){
     this.modal.open(AddUserComponent, { backdrop: false, size: 'sm' })
+  }
+
+  //edit mode
+  editMode(){
+    this.router.navigate(['/manageUsers'])
   }
 }

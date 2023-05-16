@@ -4,14 +4,14 @@ import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
-import { AddPostingComponent } from './add-posting/add-posting.component';
+import { AddPostingComponent } from '../add-posting/add-posting.component';
 
 @Component({
-  selector: 'app-postings',
-  templateUrl: './postings.component.html',
-  styleUrls: ['./postings.component.css']
+  selector: 'app-manage-postings',
+  templateUrl: './manage-postings.component.html',
+  styleUrls: ['./manage-postings.component.css']
 })
-export class PostingsComponent {
+export class ManagePostingsComponent {
   posting: any
   postingDetails: any
   date: any
@@ -21,7 +21,7 @@ export class PostingsComponent {
     private modal: NgbModal,
     private router: Router) {
 
-    this.breadcrumb.setPageDetails('Postings','Postings','/postings','')//breadcrumb values
+    this.breadcrumb.setPageDetails('Manage Postings','Postings','/postings','Manage Postings')//breadcrumb values
 
     this.getPostingDetails();//get employees details
 
@@ -60,11 +60,35 @@ export class PostingsComponent {
 
   //open modal
   openModal(){
+    this.router.navigate(['/postings'])
+  }
+
+  editPosting(){
     this.modal.open(AddPostingComponent, { backdrop: false, size: 'lg' })
   }
 
-  //edit mode
-  editMode(){
-    this.router.navigateByUrl('/managePostings')
+  deletePosting(id:any){
+      console.log(id)
+      const proceed = confirm('Are you sure you want to delete this posting?');
+
+
+    if(proceed){
+      // console.log(id)
+      //make http post request
+      this.http.delete("http://localhost:8080/api/postings/delete/"+id).subscribe((results: any) => {
+
+        if(results.status){
+          this.toastr.success('Unit Deleted Successfully', 'Success!');
+            this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
+                this.router.navigate(['/managePostings'])
+            );
+        }else{
+          this.toastr.warning('Oops!! Error Occured', 'Error!');
+            this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
+                this.router.navigate(['/managePostings'])
+            );
+        }
+      })
+    }
   }
 }

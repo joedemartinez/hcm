@@ -107,12 +107,23 @@ server.post("/api/employees/add", (req, res) => {
 
 
 //UNITS
-
+//get all records
 server.get("/api/units", (req, res) => {
     let sql = "SELECT *, (select count(*) from emp_table where unit_id = ut.unit_id) as unitNumber FROM `units_table` ut"
     conn.query(sql, function(err, results){
         if(err){
             console.log("Oops! Error Fetching Units")
+        }else{
+            res.send({status: true, data: results})
+        }
+    })
+})
+//get record
+server.get("/api/units/:id", (req, res) => {
+    let sql = "SELECT * FROM `units_table` WHERE unit_id = '"+req.params.id+"'";
+    conn.query(sql, function(err, results){
+        if(err){
+            console.log("Oops! Error Fetching Unit")
         }else{
             res.send({status: true, data: results})
         }
@@ -131,6 +142,29 @@ server.post("/api/units/add", (req, res) => {
         }
     })
 })
+//update records
+server.put("/api/units/update/:id", (req, res) => {
+    let sql = "UPDATE units_table SET Name ='" + req.body.Name + "' WHERE unit_id ='" +req.params.id +"'";
+
+    conn.query(sql, (err, results) => {
+        if(err) {
+            res.send ({ status: false, message: "Unit Update Failed"})
+        }else{
+            res.send ({ status: true, message: "Unit Update Successful"})
+        }
+    })
+})
+//delete records
+server.delete("/api/units/delete/:id", (req, res) => {
+    let sql = "DELETE FROM units_table WHERE unit_id ='" + req.params.id + "'";
+    conn.query(sql, (err) => {
+        if(err){
+            res.send({ status: false, message: "Unit Deleted Failed"})
+        } else {
+            res.send ({ status: true, message: "Unit Delete Successful"})
+        }
+    })
+})
 
 
 
@@ -141,6 +175,17 @@ server.get("/api/postings", (req, res) => {
     conn.query(sql, function(err, results){
         if(err){
             console.log("Oops! Error Fetching Postings")
+        }else{
+            res.send({status: true, data: results})
+        }
+    })
+})
+//view record
+server.get("/api/postings/:id", (req, res) => {
+    let sql = "SELECT *, (Select concat(emp_firstname, ' ', emp_middlename, ' ', emp_surname) from emp_table  where emp_id = pt.emp_id)as name FROM `postings_table` pt WHERE pt.id ="+req.params.id
+    conn.query(sql, function(err, results){
+        if(err){
+            console.log("Oops! Error Fetching Posting")
         }else{
             res.send({status: true, data: results})
         }
@@ -158,6 +203,31 @@ server.post("/api/postings/add", (req, res) => {
         }
     })
 })
+//update records
+server.put("/api/postings/update/:id", (req, res) => {
+    let sql = "UPDATE postings_table SET post_from = '" + req.body.post_from + "',post_to= '" + req.body.post_to + "',region= '" + req.body.region + "',effectiveDate= '" + req.body.effectiveDate + "',releaseDate= '" + req.body.releaseDate + "',assumptionDate= '" + req.body.assumptionDate + "' WHERE id ='" +req.params.id +"'";
+    console.log(sql)
+    conn.query(sql, (err, results) => {
+        if(err) {
+            res.send ({ status: false, message: "Posting Update Failed"})
+        }else{
+            res.send ({ status: true, message: "Posting Update Successful"})
+        }
+    })
+})
+//delete records
+server.delete("/api/postings/delete/:id", (req, res) => {
+    let sql = "DELETE FROM postings_table WHERE id ='" + req.params.id + "'";
+    conn.query(sql, (err) => {
+        if(err){
+            res.send({ status: false, message: "Posting Deleted Failed"})
+        } else {
+            res.send ({ status: true, message: "Posting Delete Successful"})
+        }
+    })
+})
+
+
 
 
 
@@ -165,7 +235,7 @@ server.post("/api/postings/add", (req, res) => {
 //PROMOTIONS
 //view records
 server.get("/api/promotions", (req, res) => {
-    let sql = "SELECT *, (Select concat(emp_firstname, ' ', emp_middlename, ' ', emp_surname) from emp_table where emp_id = pt.emp_id) as name FROM `promotions_table` pt"
+    let sql = "SELECT *, (Select concat(emp_firstname, ' ', emp_middlename, ' ', emp_surname) from emp_table where emp_id = pt.emp_id) as name FROM promotions_table pt";
     conn.query(sql, function(err, results){
         if(err){
             console.log("Oops! Error Fetching Postings")
@@ -241,16 +311,12 @@ server.post("/api/users/add", (req, res) => {
     })
 })
 
-
-
-
 //search records
 server.get("/api/users/:id", (req, res) => {
     let emp_id = req.params.id;
-    let sql = "SELECT * FROM users_table WHERE emp_id = '" + emp_id +"'";
+    let sql = "SELECT *, (Select concat(emp_firstname, ' ', emp_middlename, ' ', emp_surname) from emp_table where emp_id = ut.emp_id) as name FROM users_table ut WHERE emp_id = '" + emp_id +"'";
     conn.query(sql, (err, results) => {
         if(err){
-            console.log(sql)
             console.log("Oops! Error occured, user not found")
         }else{
             res.send({status: true, data: results})
@@ -258,9 +324,10 @@ server.get("/api/users/:id", (req, res) => {
     })
 })
 
+
 //update records
 server.put("/api/users/update/:id", (req, res) => {
-    let sql = "UPDATE users_table SET user_type ='" + req.body.user_type + "', status ='" + req.body.status + "' WHERE emp_id ='" +req.params.id +"'";
+    let sql = "UPDATE users_table SET user_type ='" + req.body.user_type + "' WHERE emp_id ='" +req.body.emp_id +"'";
 
     conn.query(sql, (err, results) => {
         if(err) {
@@ -271,6 +338,20 @@ server.put("/api/users/update/:id", (req, res) => {
     })
 })
 
+//reset password
+server.put("/api/users/reset/:id", (req, res) => {
+    password = bcrypt.hashSync('password', 10) //encode password
+
+    let sql = "UPDATE users_table SET password ='" + password + "' WHERE emp_id ='" +req.params.id +"'";
+    console.log(sql)
+    conn.query(sql, (err, results) => {
+        if(err) {
+            res.send ({ status: false, message: "Password Reset Failed"})
+        }else{
+            res.send ({ status: true, message: "Password Reset Successful"})
+        }
+    })
+})
 
 //delete records
 server.delete("/api/users/delete/:id", (req, res) => {

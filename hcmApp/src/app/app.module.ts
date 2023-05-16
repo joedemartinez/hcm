@@ -25,6 +25,11 @@ import { UnitsComponent } from './components/units/units.component';
 import { AddUnitComponent } from './components/units/add-unit/add-unit.component';
 import { UsersComponent } from './components/users/users.component';
 import { AddUserComponent } from './components/users/add-user/add-user.component';
+import { ManageUsersComponent } from './components/users/manage-users/manage-users.component';
+import { EditUserComponent } from './components/users/edit-user/edit-user.component';
+import { ManageUnitsComponent } from './components/units/manage-units/manage-units.component';
+import { ManagePostingsComponent } from './components/postings/manage-postings/manage-postings.component';
+import { ManageEmployeesComponent } from './components/employees/manage-employees/manage-employees.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +48,12 @@ import { AddUserComponent } from './components/users/add-user/add-user.component
     UnitsComponent,
     AddUnitComponent,
     UsersComponent,
-    AddUserComponent
+    AddUserComponent,
+    ManageUsersComponent,
+    EditUserComponent,
+    ManageUnitsComponent,
+    ManagePostingsComponent,
+    ManageEmployeesComponent
   ],
   imports: [
     BrowserModule,

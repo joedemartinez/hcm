@@ -1,40 +1,51 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
-import { AddUnitComponent } from './add-unit/add-unit.component';
+import { AddEmployeeComponent } from '../add-employee/add-employee.component';
 
 @Component({
-  selector: 'app-units',
-  templateUrl: './units.component.html',
-  styleUrls: ['./units.component.css']
+  selector: 'app-manage-employees',
+  templateUrl: './manage-employees.component.html',
+  styleUrls: ['./manage-employees.component.css']
 })
-export class UnitsComponent {
-  units: any
-  unitsDetails: any
-  unitsHistory:any
+export class ManageEmployeesComponent {
+  emp: any
+  empDetails: any
   date: any
   
   constructor ( private breadcrumb: BreadcrumbService, private toastr: ToastrService,
     private http: HttpClient,
     private modal: NgbModal,
-    private router: Router) {
+    private router: Router,
+    private route: ActivatedRoute) {
+   
+    this.breadcrumb.setPageDetails('Manage Employees','Employees','/employees','Manage Employees')//breadcrumb values
 
-    this.breadcrumb.setPageDetails('Units','Units','/unit','')//breadcrumb values
+    this.getEmpVal();//get total employees
 
-    this.getUnitDetails();//get unit details
-
+    this.getEmpDetails();//get employees details
 
   }
 
-  getUnitDetails(){
-    //unit
-    this.http.get("http://localhost:8080/api/units").subscribe((results: any) => {
-      this.unitsDetails =  results.data
+ 
+  //get number of employees
+  getEmpVal(){
+    //Emp
+    this.http.get("http://localhost:8080/api/count/emps").subscribe((results: any) => {
+      this.emp =  results.data[0]['count']
+    })
+  }
+
+  getEmpDetails(){
+    //Emp
+    this.http.get("http://localhost:8080/api/employees").subscribe((results: any) => {
+      this.empDetails =  results.data
+      
       setTimeout(()=>{
-        $('#unitsDataTable').DataTable( {
+        $('#empDataTable').DataTable( {
           pagingType: 'simple_numbers',
           dom: 'C<"clear">lBfrtip',
           // dom: '<B<"clear">liflp',
@@ -47,6 +58,7 @@ export class UnitsComponent {
       }, 2);
     })
   }
+
   
 
   conDate(val:any){ //conveting date to proper format
@@ -60,10 +72,16 @@ export class UnitsComponent {
 
   //open modal
   openModal(){
-    this.modal.open(AddUnitComponent, { backdrop: false, size: 'sm' })
+    this.modal.open(AddEmployeeComponent, { backdrop: false, size: 'lg' })
   }
 
   editMode(){
-    this.router.navigate(['/manageUnits'])
+    this.router.navigateByUrl('/manageEmployees')
   }
+
+  editEmployee(){}
+
+  deleteEmployee(id:any){}
+
+
 }

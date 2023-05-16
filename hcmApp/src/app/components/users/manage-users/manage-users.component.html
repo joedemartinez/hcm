@@ -12,15 +12,15 @@
 
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">User Details.</h3>
-                            <button (click)="openModal()" class="float-right btn btn-primary"> <i class="fas fa-plus"></i> Add User</button>
-                            <button (click)="editMode()" class="float-right btn btn-primary mr-3"> <i class="fas fa-edit"></i> Edit Mode</button>
+                            <h3 class="card-title">Manage User</h3>
+                            <a routerLink="/users" class="float-right btn btn-primary"> <i class="fas fa-arrow-left"></i> Back</a>
                         </div>
 
                         <div class="card-body">
                             <table id="usersDataTable" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
+                                        <th>Action</th>
                                         <th>#</th>
                                         <th>Emp ID</th>
                                         <th>Name</th>
@@ -29,6 +29,11 @@
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let user of usersDetails; let i = index">
+                                        <td>
+                                            <button class="btn btn-sm" title="Edit" style="color: rgb(240, 221, 15)" (click)="editUser()" routerLink="/manageUsers" [queryParams]="{id: user.emp_id}"> <i class="fa fa-edit"></i></button>
+                                            <button class="btn btn-sm" title="Delete" style="color: red" (click)="deleteUser(user.emp_id)" routerLink="/manageUsers" > <i class="fa fa-trash"></i></button>
+                                            <button class="btn btn-sm" title="Delete" style="color: white" (click)="resetPassword(user.emp_id)" routerLink="/manageUsers" > <i class="fa fa-sync-alt"></i></button>
+                                        </td>
                                         <td>{{i + 1 }}</td>
                                         <td>{{user.emp_id}}</td>
                                         <td>{{user.name}}</td>

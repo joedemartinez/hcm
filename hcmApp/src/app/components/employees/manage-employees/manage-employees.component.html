@@ -21,6 +21,7 @@
                             <table id="empDataTable" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
+                                        <th>Action</th>
                                         <th>#</th>
                                         <th>Photo</th>
                                         <th>Emp ID</th>
@@ -38,6 +39,10 @@
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let emp of empDetails; let i = index">
+                                        <td>
+                                            <button class="btn btn-sm" title="Edit" style="color: rgb(240, 221, 15)" (click)="editEmployee()" routerLink="/managePostings" [queryParams]="{id: emp.emp_id}"> <i class="fa fa-edit"></i></button>
+                                            <button class="btn btn-sm" title="Delete" style="color: red" (click)="deleteEmployee(emp.emp_id)" routerLink="/managePostings" [queryParams]="{id: emp.emp_id}"> <i class="fa fa-trash"></i></button>
+                                        </td>
                                         <td>{{i +1 }}</td>
                                         <td>
                                             <img *ngIf="emp.photo != '' " src='assets/img/{{emp.photo}}' height="90px">
