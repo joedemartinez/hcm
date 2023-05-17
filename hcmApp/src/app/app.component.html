@@ -4,13 +4,13 @@
         <img class="animation__shake" src="assets/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
     </div>
 
-    <app-menu-bar></app-menu-bar>
+    <app-menu-bar *ngIf="log === 'true'"></app-menu-bar>
 
-    <app-side-bar></app-side-bar>
+    <app-side-bar *ngIf="log === 'true'"></app-side-bar>
 
     <router-outlet></router-outlet>
 
-    <app-footer></app-footer>
+    <app-footer *ngIf="log === 'true'"></app-footer>
 
 </div>
 <!-- <script>

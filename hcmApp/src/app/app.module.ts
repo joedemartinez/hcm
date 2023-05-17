@@ -30,6 +30,7 @@ import { EditUserComponent } from './components/users/edit-user/edit-user.compon
 import { ManageUnitsComponent } from './components/units/manage-units/manage-units.component';
 import { ManagePostingsComponent } from './components/postings/manage-postings/manage-postings.component';
 import { ManageEmployeesComponent } from './components/employees/manage-employees/manage-employees.component';
+import { LoginComponent } from './components/login/login.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { ManageEmployeesComponent } from './components/employees/manage-employee
     EditUserComponent,
     ManageUnitsComponent,
     ManagePostingsComponent,
-    ManageEmployeesComponent
+    ManageEmployeesComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

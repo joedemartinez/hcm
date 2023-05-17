@@ -35,6 +35,35 @@ server.listen(8080, function check( err) {
 })
 
 
+//LOGIN
+//checking for authN
+// const password_hash =bcrypt.hashSync('dummy', 10); //hashing
+    // console.log(password_hash);
+    // const verified = bcrypt.compareSync('dummy', password_hash); // comparing already existing
+
+server.post("/api/login/:id", (req, res) => {
+    
+    let {emp_id, password} = req.body
+    let sql = "SELECT *, (Select concat(emp_firstname, ' ', emp_middlename, ' ', emp_surname) from emp_table where emp_id = ut.emp_id) as name FROM users_table ut WHERE emp_id = '"+emp_id+"'";
+    
+    conn.query(sql, function(err, results){
+        if(err){
+            res.send({status: false, message: "Oops! User do not exist"})
+        }else{
+            result = results[0].password
+            const verified = bcrypt.compareSync(password, result);
+            if (verified) {
+                res.send({status: true, data: results})
+            } else {
+                res.send({status: false, message: "Oops! Error occured, Wrong Staff ID or Password"})
+            }
+            
+        }
+    })
+})
+
+
+
 //DASHBOARD VALUES
 //counting items in tables => emp, user, units, promotions
 server.get("/api/count/users", (req, res) => { //users
@@ -400,7 +429,7 @@ server.put("/api/users/reset/:id", (req, res) => {
     password = bcrypt.hashSync('password', 10) //encode password
 
     let sql = "UPDATE users_table SET password ='" + password + "' WHERE emp_id ='" +req.params.id +"'";
-    console.log(sql)
+    // console.log(sql)
     conn.query(sql, (err, results) => {
         if(err) {
             res.send ({ status: false, message: "Password Reset Failed"})
