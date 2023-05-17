@@ -79,38 +79,38 @@ export class AddPostingComponent {
 
     if(this.id > ''){ //updating posting
        //make http post request
-    this.http.put("http://localhost:8080/api/postings/update/"+this.id, this.addPosting.value).subscribe((results: any) => {
-      // console.log(results.status)
-      if(results.status){
-        this.toastr.success('Posting Updated Successfully', 'Success!');
-          this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
-              this.router.navigate(['/managePostings'])
-          );
-      }else{
-        this.toastr.warning('Oops!! Error Occured', 'Error!');
-          this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
-              this.router.navigate(['/managePostings'])
-          );
-      }
+      this.http.put("http://localhost:8080/api/postings/update/"+this.id, this.addPosting.value).subscribe((results: any) => {
+        // console.log(results.status)
+        if(results.status){
+          this.toastr.success('Posting Updated Successfully', 'Success!');
+            this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
+                this.router.navigate(['/managePostings'])
+            );
+        }else{
+          this.toastr.warning('Oops!! Error Occured', 'Error!');
+            this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
+                this.router.navigate(['/managePostings'])
+            );
+        }
 
-    })
+      })
     }else{//new posting
       //make http post request
-    this.http.post("http://localhost:8080/api/postings/add", this.addPosting.value).subscribe((results: any) => {
-      
-      if(results.status){
-        this.toastr.success('Posting Added Successfully', 'Success!');
-          this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
-              this.router.navigate(['/postings'])
-          );
-      }else{
-        this.toastr.warning('Oops!! Error Occured', 'Error!');
-          this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
-              this.router.navigate(['/postings'])
-          );
-      }
+      this.http.post("http://localhost:8080/api/postings/add", this.addPosting.value).subscribe((results: any) => {
+        
+        if(results.status){
+          this.toastr.success('Posting Added Successfully', 'Success!');
+            this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
+                this.router.navigate(['/postings'])
+            );
+        }else{
+          this.toastr.warning('Oops!! Error Occured', 'Error!');
+            this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
+                this.router.navigate(['/postings'])
+            );
+        }
 
-    })
+      })
     }
     
     this.modal.dismissAll();

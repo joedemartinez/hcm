@@ -15,6 +15,7 @@ export class SideBarComponent {
 
   getEmpVal(){
     //Emp
+    
     this.http.get("http://localhost:8080/api/count/emps").subscribe((results: any) => {
       this.emp =  results.data[0]['count']
     })

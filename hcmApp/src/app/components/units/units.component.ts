@@ -33,6 +33,7 @@ export class UnitsComponent {
     //unit
     this.http.get("http://localhost:8080/api/units").subscribe((results: any) => {
       this.unitsDetails =  results.data
+      console.log(this.unitsDetails)
       setTimeout(()=>{
         $('#unitsDataTable').DataTable( {
           pagingType: 'simple_numbers',

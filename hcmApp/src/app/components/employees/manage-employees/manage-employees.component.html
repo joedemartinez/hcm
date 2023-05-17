@@ -13,8 +13,7 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">Employee Details.</h3>
-                            <button (click)="openModal()" class="float-right btn btn-primary"> <i class="fas fa-user-plus"></i> Add Employee</button>
-                            <button (click)="editMode()" class="float-right btn btn-primary mr-3"> <i class="fas fa-edit"></i> Edit Mode</button>
+                            <a routerLink="/employees" class="float-right btn btn-primary"> <i class="fas fa-arrow-left"></i> Back</a>
                         </div>
 
                         <div class="card-body">
@@ -40,8 +39,8 @@
                                 <tbody>
                                     <tr *ngFor="let emp of empDetails; let i = index">
                                         <td>
-                                            <button class="btn btn-sm" title="Edit" style="color: rgb(240, 221, 15)" (click)="editEmployee()" routerLink="/managePostings" [queryParams]="{id: emp.emp_id}"> <i class="fa fa-edit"></i></button>
-                                            <button class="btn btn-sm" title="Delete" style="color: red" (click)="deleteEmployee(emp.emp_id)" routerLink="/managePostings" [queryParams]="{id: emp.emp_id}"> <i class="fa fa-trash"></i></button>
+                                            <button class="btn btn-sm" title="Edit" style="color: rgb(240, 221, 15)" (click)="editEmployee()" routerLink="/manageEmployees" [queryParams]="{id: emp.emp_id}"> <i class="fa fa-edit"></i></button>
+                                            <button class="btn btn-sm" title="Delete" style="color: red" (click)="deleteEmployee(emp.emp_id)" routerLink="/manageEmployees" [queryParams]="{id: emp.emp_id}"> <i class="fa fa-trash"></i></button>
                                         </td>
                                         <td>{{i +1 }}</td>
                                         <td>

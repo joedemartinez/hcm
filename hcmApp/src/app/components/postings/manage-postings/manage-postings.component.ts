@@ -68,7 +68,7 @@ export class ManagePostingsComponent {
   }
 
   deletePosting(id:any){
-      console.log(id)
+      // console.log(id)
       const proceed = confirm('Are you sure you want to delete this posting?');
 
 

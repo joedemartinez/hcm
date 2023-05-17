@@ -71,7 +71,7 @@ export class ManageEmployeesComponent {
   }
 
   //open modal
-  openModal(){
+  editEmployee(){
     this.modal.open(AddEmployeeComponent, { backdrop: false, size: 'lg' })
   }
 
@@ -79,9 +79,30 @@ export class ManageEmployeesComponent {
     this.router.navigateByUrl('/manageEmployees')
   }
 
-  editEmployee(){}
+  deleteEmployee(id:any){
+    // console.log(id)
+    const proceed = confirm('Are you sure you want to delete this employees?. \n Note: User account will also be deleted');
 
-  deleteEmployee(id:any){}
+
+    if(proceed){
+      // console.log(id)
+      //make http post request
+      this.http.delete("http://localhost:8080/api/employees/delete/"+id).subscribe((results: any) => {
+
+        if(results.status){
+          this.toastr.success('Unit Deleted Successfully', 'Success!');
+            this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
+                this.router.navigate(['/manageEmployees'])
+            );
+        }else{
+          this.toastr.warning('Oops!! Error Occured', 'Error!');
+            this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
+                this.router.navigate(['/manageEmployees'])
+            );
+        }
+      })
+    }
+  }
 
 
 }

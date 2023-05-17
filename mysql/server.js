@@ -77,6 +77,17 @@ server.get("/api/count/exits", (req, res) => { //exits
         }
     })
 })
+//chart values
+server.get("/api/chartVal", (req, res) => {
+    let sql = "SELECT *, (select count(*) from emp_table where unit_id = ut.unit_id) as unitNumber FROM `units_table` ut where ut.unit_id IN (SELECT unit_id from emp_table)"
+    conn.query(sql, function(err, results){
+        if(err){
+            console.log("Oops! Error Fetching Units")
+        }else{
+            res.send({status: true, data: results})
+        }
+    })
+})
 
 
 //EMPLOYEES
@@ -86,6 +97,17 @@ server.get("/api/employees", (req, res) => {
     conn.query(sql, function(err, results){
         if(err){
             console.log("Oops! Error Fetching Employees")
+        }else{
+            res.send({status: true, data: results})
+        }
+    })
+})
+//employee record
+server.get("/api/employees/:id", (req, res) => {
+    let sql = "SELECT `id`,`emp_id`,`emp_firstname`,`emp_middlename`,`emp_surname`,`emp_gender`,`emp_dob`,`emp_email`,`emp_highestqualification`,`emp_staffstatus`,`emp_yearswithministry`,`emp_maritalstatus`,`emp_phoneno`,`photo`, `unit_id`, (select name from units_table WHERE unit_id = emp.unit_id) as Unit FROM `emp_table` emp WHERE emp.emp_id = '"+req.params.id+"'";
+    conn.query(sql, function(err, results){
+        if(err){
+            console.log("Oops! Error Fetching Employee")
         }else{
             res.send({status: true, data: results})
         }
@@ -104,6 +126,41 @@ server.post("/api/employees/add", (req, res) => {
         }
     })
 })
+//update records
+server.put("/api/employees/update/:id", (req, res) => {
+    let sql = "UPDATE emp_table SET `emp_id`='" + req.body.emp_id + "',`emp_surname`='" + req.body.emp_surname + "',`emp_firstname`='" + req.body.emp_firstname + "',`emp_middlename`='" + req.body.emp_middlename + "',`emp_gender`='" + req.body.emp_gender + "',`emp_dob`='" + req.body.emp_dob + "',`emp_email`='" + req.body.emp_email + "',`emp_highestqualification`='" + req.body.emp_highestqualification + "',`emp_staffstatus`='" + req.body.emp_staffstatus + "',`emp_yearswithministry`='" + req.body.emp_yearswithministry + "',`emp_maritalstatus`='" + req.body.emp_maritalstatus + "',`emp_phoneno`='" + req.body.emp_phoneno + "',`photo`='" + req.body.photo + "',`unit_id`='" + req.body.unit_id + "' WHERE emp_id ='" +req.params.id +"'";
+
+    conn.query(sql, (err, results) => {
+        if(err) {
+            res.send ({ status: false, message: "Employee Update Failed"})
+        }else{
+            res.send ({ status: true, message: "Employee Update Successful"})
+        }
+    })
+})
+//delete records
+server.delete("/api/employees/delete/:id", (req, res) => {
+    let sql = "DELETE FROM emp_table WHERE emp_id ='" + req.params.id + "'";
+    conn.query(sql, (err) => {
+        if(err){
+            res.send({ status: false, message: "Employee Deleted Failed"})
+        } else {
+            let sql = "DELETE FROM users_table WHERE emp_id ='" + req.params.id + "'";
+            conn.query(sql, (err) => {
+                if(err){
+                    res.send({ status: false, message: "Employee Deleted Failed"})
+                } else {
+                    
+                    res.send ({ status: true, message: "Employee Delete Successful"})
+                }
+            })
+            // res.send ({ status: true, message: "Employee Delete Successful"})
+        }
+    })
+})
+
+
+
 
 
 //UNITS

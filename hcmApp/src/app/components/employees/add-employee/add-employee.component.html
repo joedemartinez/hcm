@@ -25,7 +25,6 @@
             <div class="form-group col-md-4">
                 <label for="middlename">Middle Name</label>
                 <input type="text" class="form-control" placeholder="Enter middle name" formControlName="emp_middlename"
-                    required
                     [ngClass]="{'is-invalid' : addEmp.controls['emp_middlename'].invalid && addEmp.controls['emp_middlename'].touched }">
             </div>
             <div class="form-group col-md-4">
@@ -89,6 +88,7 @@
                 <select  class="form-control" formControlName="emp_staffstatus" required
                     [ngClass]="{'is-invalid' : addEmp.controls['emp_staffstatus'].invalid && addEmp.controls['emp_staffstatus'].touched }">
                     <option value="" selected disabled>Select Option</option>
+                    <option *ngIf="empDetails" value="{{empDetails.emp_staffstatus}}" selected>{{empDetails.emp_staffstatus}}</option>
                     <option value="Senior Staff" >Senior Staff</option>
                     <option value="Junior Staff" >Junior Staff</option>
                 </select>
