@@ -18,6 +18,7 @@ export class ManageUsersComponent {
   empList:any
   date: any
   id:any
+  ifMe: any
   
   constructor ( private breadcrumb: BreadcrumbService, private toastr: ToastrService,
     private http: HttpClient,
@@ -29,7 +30,7 @@ export class ManageUsersComponent {
 
     this.getUsersDetails();//get Users details
   
-
+    this.ifMe = localStorage.getItem('emp_id') //value to hide action btns on loggedIn user
   }
 
   getUsersDetails(){

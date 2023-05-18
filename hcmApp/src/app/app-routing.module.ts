@@ -12,6 +12,8 @@ import { UnitsComponent } from './components/units/units.component';
 import { ManageUsersComponent } from './components/users/manage-users/manage-users.component';
 import { UsersComponent } from './components/users/users.component';
 import { AuthGuard } from './guards/auth.guard';
+import { LoginPageGuard } from './guards/login-page.guard';
+import { ManageAuthGuard } from './guards/manage-auth.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },//, canActivate: [AppGuard]
@@ -21,11 +23,11 @@ const routes: Routes = [
   { path: 'promotions', component: PromotionsComponent,canActivate: [AuthGuard] },
   { path: 'units', component: UnitsComponent, canActivate: [AuthGuard]},
   { path: 'users', component: UsersComponent, canActivate: [AuthGuard]},
-  { path: 'manageUsers', component: ManageUsersComponent, canActivate: [AuthGuard]},
-  { path: 'manageUnits', component: ManageUnitsComponent, canActivate: [AuthGuard]},
-  { path: 'managePostings', component: ManagePostingsComponent, canActivate: [AuthGuard]},
-  { path: 'manageEmployees', component: ManageEmployeesComponent, canActivate: [AuthGuard]},
-  { path: 'login', component: LoginComponent},
+  { path: 'manageUsers', component: ManageUsersComponent, canActivate: [ManageAuthGuard]},
+  { path: 'manageUnits', component: ManageUnitsComponent, canActivate: [ManageAuthGuard]},
+  { path: 'managePostings', component: ManagePostingsComponent, canActivate: [ManageAuthGuard]},
+  { path: 'manageEmployees', component: ManageEmployeesComponent, canActivate: [ManageAuthGuard]},
+  { path: 'login', component: LoginComponent, canActivate: [LoginPageGuard]},
 
   { path: '**', component: DashboardComponent, canActivate: [AuthGuard]},
 ];

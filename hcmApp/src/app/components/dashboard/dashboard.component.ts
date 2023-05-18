@@ -23,6 +23,7 @@ export class DashboardComponent implements AfterViewInit {
     this.breadcrumb.setPageDetails('Dashboard','','','')
 
     this.getDashboardVals()
+
   }
 
 
@@ -99,7 +100,8 @@ export class DashboardComponent implements AfterViewInit {
       });
       
     }) 
-    
+
+   
   }
 
 }

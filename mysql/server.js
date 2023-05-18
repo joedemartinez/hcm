@@ -44,7 +44,7 @@ server.listen(8080, function check( err) {
 server.post("/api/login/:id", (req, res) => {
     
     let {emp_id, password} = req.body
-    let sql = "SELECT *, (Select concat(emp_firstname, ' ', emp_middlename, ' ', emp_surname) from emp_table where emp_id = ut.emp_id) as name FROM users_table ut WHERE emp_id = '"+emp_id+"'";
+    let sql = "SELECT *, (Select concat(emp_firstname, ' ', emp_middlename, ' ', emp_surname) from emp_table where emp_id = ut.emp_id) as name, (Select photo from emp_table where emp_id = ut.emp_id) as photo FROM users_table ut WHERE emp_id = '"+emp_id+"'";
     
     conn.query(sql, function(err, results){
         if(err){
@@ -61,6 +61,26 @@ server.post("/api/login/:id", (req, res) => {
         }
     })
 })
+
+
+
+//PROFILE
+//ChangePassword
+server.put("/api/password/update/:id", (req, res) => {
+    let {newPassword} = req.body
+    password = bcrypt.hashSync(newPassword, 10) //encode password
+
+    let sql = "UPDATE users_table SET password ='" + password + "' WHERE emp_id ='" +req.params.id +"'";
+    // console.log(sql)
+    conn.query(sql, (err, results) => {
+        if(err) {
+            res.send ({ status: false, message: "Password Reset Failed"})
+        }else{
+            res.send ({ status: true, message: "Password Reset Successful"})
+        }
+    })
+})
+
 
 
 

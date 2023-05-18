@@ -16,6 +16,7 @@ export class UnitsComponent {
   unitsDetails: any
   unitsHistory:any
   date: any
+  priv: any
   
   constructor ( private breadcrumb: BreadcrumbService, private toastr: ToastrService,
     private http: HttpClient,
@@ -26,14 +27,16 @@ export class UnitsComponent {
 
     this.getUnitDetails();//get unit details
 
-
+    this.priv = localStorage.getItem('user_type')
   }
+
+
 
   getUnitDetails(){
     //unit
     this.http.get("http://localhost:8080/api/units").subscribe((results: any) => {
       this.unitsDetails =  results.data
-      console.log(this.unitsDetails)
+      // console.log(this.unitsDetails)
       setTimeout(()=>{
         $('#unitsDataTable').DataTable( {
           pagingType: 'simple_numbers',

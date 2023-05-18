@@ -1,23 +1,21 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRoute, ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuard implements CanActivate {
+export class LoginPageGuard implements CanActivate {
 
   constructor(private router: Router){}
 
-
-  log:any
-  currentPath:any
-
+  log: any
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-
-    // Read the initial value from local storage
+    
+      
+      // Read the initial value from local storage
     this.log = localStorage.getItem('loggedIn');
 
     // Listen for the storage event and update the value in real-time
@@ -28,15 +26,12 @@ export class AuthGuard implements CanActivate {
     },1)
 
 
-    if (this.log === 'true') {
+    if (this.log !== 'true') {
       return true; //if logged In
     } else {
-      this.router.navigate(['/login']) //go to login page if not logged in
+      this.router.navigate(['/dashboard']) //go to login page if not logged in
       return false
     }
-
-    
-    
   }
   
 }

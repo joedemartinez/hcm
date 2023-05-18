@@ -15,6 +15,7 @@ export class PostingsComponent {
   posting: any
   postingDetails: any
   date: any
+  priv:any
   
   constructor ( private breadcrumb: BreadcrumbService, private toastr: ToastrService,
     private http: HttpClient,
@@ -25,6 +26,7 @@ export class PostingsComponent {
 
     this.getPostingDetails();//get employees details
 
+    this.priv = localStorage.getItem('user_type')
   }
 
   getPostingDetails(){

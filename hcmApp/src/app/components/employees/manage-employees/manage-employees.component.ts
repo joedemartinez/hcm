@@ -15,6 +15,7 @@ export class ManageEmployeesComponent {
   emp: any
   empDetails: any
   date: any
+  ifMe:any
   
   constructor ( private breadcrumb: BreadcrumbService, private toastr: ToastrService,
     private http: HttpClient,
@@ -28,6 +29,7 @@ export class ManageEmployeesComponent {
 
     this.getEmpDetails();//get employees details
 
+    this.ifMe = localStorage.getItem('emp_id')
   }
 
  

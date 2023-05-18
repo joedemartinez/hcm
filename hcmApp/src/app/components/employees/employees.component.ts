@@ -16,6 +16,7 @@ export class EmployeesComponent {
   emp: any
   empDetails: any
   date: any
+  priv: any
   
   constructor ( private breadcrumb: BreadcrumbService, private toastr: ToastrService,
     private http: HttpClient,
@@ -29,6 +30,7 @@ export class EmployeesComponent {
 
     this.getEmpDetails();//get employees details
 
+    this.priv = localStorage.getItem('user_type')
   }
 
  

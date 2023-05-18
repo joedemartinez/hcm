@@ -41,6 +41,7 @@ export class LoginComponent {
         localStorage.setItem('emp_id', results.data[0].emp_id) // set storage val
         localStorage.setItem('name', results.data[0].name)
         localStorage.setItem('user_type', results.data[0].user_type)
+        localStorage.setItem('photo', results.data[0].photo)
 
         this.toastr.success('Login Successful', 'Success!');
           this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
@@ -55,4 +56,5 @@ export class LoginComponent {
       }
     })
   }
+
 }

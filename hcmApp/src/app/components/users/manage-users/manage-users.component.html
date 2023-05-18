@@ -30,9 +30,9 @@
                                 <tbody>
                                     <tr *ngFor="let user of usersDetails; let i = index">
                                         <td>
-                                            <button class="btn btn-sm" title="Edit" style="color: rgb(240, 221, 15)" (click)="editUser()" routerLink="/manageUsers" [queryParams]="{id: user.emp_id}"> <i class="fa fa-edit"></i></button>
-                                            <button class="btn btn-sm" title="Delete" style="color: red" (click)="deleteUser(user.emp_id)" routerLink="/manageUsers" > <i class="fa fa-trash"></i></button>
-                                            <button class="btn btn-sm" title="Delete" style="color: white" (click)="resetPassword(user.emp_id)" routerLink="/manageUsers" > <i class="fa fa-sync-alt"></i></button>
+                                            <button *ngIf="ifMe !== user.emp_id" class="btn btn-sm" title="Edit" style="color: rgb(240, 221, 15)" (click)="editUser()" routerLink="/manageUsers" [queryParams]="{id: user.emp_id}"> <i class="fa fa-edit"></i></button>
+                                            <button *ngIf="ifMe !== user.emp_id" class="btn btn-sm" title="Delete" style="color: red" (click)="deleteUser(user.emp_id)" routerLink="/manageUsers" > <i class="fa fa-trash"></i></button>
+                                            <button *ngIf="ifMe !== user.emp_id" class="btn btn-sm" title="Delete" style="color: white" (click)="resetPassword(user.emp_id)" routerLink="/manageUsers" > <i class="fa fa-sync-alt"></i></button>
                                         </td>
                                         <td>{{i + 1 }}</td>
                                         <td>{{user.emp_id}}</td>

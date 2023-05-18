@@ -7,3 +7,9 @@ INSTRUCTIONS
     if port number is being used by another, change the port
 
 4. Go into the hcmApp and run the angular project "ng serve"
+
+
+
+credentials (username, password)
+ => Emp65294, password
+ => H2020435, password

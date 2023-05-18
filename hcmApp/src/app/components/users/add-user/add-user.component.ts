@@ -22,7 +22,7 @@ export class AddUserComponent {
     private toastr: ToastrService) {
   
 
-    //NEW POSTING MODAL
+    // MODAL
     //set validations
     this.addUser = this.fb.group({
       emp_id: ['', [Validators.required]],

@@ -31,6 +31,8 @@ import { ManageUnitsComponent } from './components/units/manage-units/manage-uni
 import { ManagePostingsComponent } from './components/postings/manage-postings/manage-postings.component';
 import { ManageEmployeesComponent } from './components/employees/manage-employees/manage-employees.component';
 import { LoginComponent } from './components/login/login.component';
+import { ProfileComponent } from './components/profile/profile.component';
+import { ChangePasswordComponent } from './components/change-password/change-password.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +57,9 @@ import { LoginComponent } from './components/login/login.component';
     ManageUnitsComponent,
     ManagePostingsComponent,
     ManageEmployeesComponent,
-    LoginComponent
+    LoginComponent,
+    ProfileComponent,
+    ChangePasswordComponent
   ],
   imports: [
     BrowserModule,
