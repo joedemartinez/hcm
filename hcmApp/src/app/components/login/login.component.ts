@@ -49,10 +49,10 @@ export class LoginComponent {
           );
            
       }else{
-        this.toastr.warning('Oops!! Wrong Staff ID or Password', 'Error!');
-          this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
-              this.router.navigate(['/login'])
-          );
+        this.toastr.warning(results.message, 'Error!');
+        this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
+            this.router.navigate(['/login'])
+        );
       }
     })
   }
