@@ -20,7 +20,7 @@ export class AddEmployeeComponent {
   id: any
   date: any
   empDetails: any
-
+  fileToUpload!:File
 
 
   constructor (private fb: FormBuilder, 
@@ -140,8 +140,31 @@ export class AddEmployeeComponent {
       })
     }
 
+    //upload file
+    this.uploadFile()
+
     this.modal.dismissAll();
     
+  }
+
+  //uploading file
+  uploadFile() {
+    // Perform file upload logic here
+    const formData: FormData = new FormData();
+      formData.append('file', this.fileToUpload);
+
+      // Replace 'uploads' with your desired folder path within the assets directory
+      const uploadUrl = 'http://localhost:8080/upload';
+
+      this.http.post(uploadUrl, formData)
+        .subscribe(
+          response => {
+            console.log('File uploaded successfully.');
+          },
+          error => {
+            console.log('Error uploading file:', error);
+          }
+        );
   }
 
   getUnitList(){
@@ -153,6 +176,7 @@ export class AddEmployeeComponent {
 
   onFileSelected(event:any) {
     this.imageName = event.target.files[0].name;
+    this.fileToUpload = event.target.files[0]
 
     if(event.target.files[0]){
       let reader = new FileReader()

@@ -8,6 +8,21 @@ server.use(bodyParser.json())
 server.use(cors()) //CORS policy: No 'Access-Control-Allow-Origin' 
 const bcrypt = require('bcryptjs'); //password hashing
 
+//file upload
+const multer  = require('multer')
+// Configure the storage destination for uploaded files
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, '../hcmApp/src/assets/img'); // Specify the destination folder
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
+
+
 //establish db conn
 const conn = mysql.createConnection({
     host: "localhost",
@@ -33,6 +48,11 @@ server.listen(8080, function check( err) {
         console.log("Started...")
     }
 })
+
+// Handle the file upload request
+server.post('/upload', upload.single('file'), (req, res) => {
+    res.send('File uploaded successfully.');
+  });
 
 
 //LOGIN
