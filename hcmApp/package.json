@@ -23,6 +23,7 @@
     "@types/chart.js": "^2.9.37",
     "admin-lte": "3.2",
     "angular-datatables": "^15.0.1",
+    "bn-ng-idle": "^2.0.5",
     "chart.js": "^4.3.0",
     "datatables.net": "^1.12.1",
     "datatables.net-buttons": "^2.3.6",
