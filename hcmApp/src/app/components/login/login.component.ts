@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { BnNgIdleService } from 'bn-ng-idle';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -17,13 +18,16 @@ export class LoginComponent {
   constructor (private fb: FormBuilder,
     private router: Router, 
     private http: HttpClient,
-    private toastr: ToastrService) {
+    private toastr: ToastrService,
+    private bnIdle: BnNgIdleService) {
 
     //set validations
     this.loginFb = this.fb.group({
       emp_id: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8)]]
     })
+
+    this.bnIdle.stopTimer();
     
   }
   
