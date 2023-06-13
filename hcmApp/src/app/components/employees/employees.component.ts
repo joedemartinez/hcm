@@ -1,10 +1,10 @@
-import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddEmployeeComponent } from './add-employee/add-employee.component';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HttpService } from 'src/app/services/http.service';
 
  
 @Component({
@@ -19,7 +19,7 @@ export class EmployeesComponent {
   priv: any
   
   constructor ( private breadcrumb: BreadcrumbService, private toastr: ToastrService,
-    private http: HttpClient,
+    private httpService: HttpService,
     private modal: NgbModal,
     private router: Router,
     private route: ActivatedRoute) {
@@ -37,14 +37,14 @@ export class EmployeesComponent {
   //get number of employees
   getEmpVal(){
     //Emp
-    this.http.get("http://localhost:8080/api/count/emps").subscribe((results: any) => {
+    this.httpService.get("http://localhost:8080/api/count/emps").subscribe((results: any) => {
       this.emp =  results.data[0]['count']
     })
   }
 
   getEmpDetails(){
     //Emp
-    this.http.get("http://localhost:8080/api/employees").subscribe((results: any) => {
+    this.httpService.get("http://localhost:8080/api/employees").subscribe((results: any) => {
       this.empDetails =  results.data
       
       setTimeout(()=>{

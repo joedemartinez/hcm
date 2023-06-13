@@ -8,6 +8,22 @@ server.use(bodyParser.json())
 server.use(cors()) //CORS policy: No 'Access-Control-Allow-Origin' 
 const bcrypt = require('bcryptjs'); //password hashing
 
+// //JSON WEB TOKEN
+const jwt = require('jsonwebtoken');
+const expiresIn = '1d'; // Set the expiration time (e.g., 1 hour)
+//jwt request auth
+function authenticate(req, res, next) {
+    const token = req.headers.authorization.split(' ')[1];
+
+    try {
+        const decoded = jwt.verify(token, 'secretKey');
+        req.emp_id = decoded.emp_id; // Store the user ID in the request object for future use
+        next(); // Proceed to the next middleware or route handler
+    } catch (error) {
+        res.status(401).json({ error: 'Invalid token' }); // or redirect to login page
+    }
+}
+
 //file upload
 const multer  = require('multer')
 // Configure the storage destination for uploaded files
@@ -50,7 +66,7 @@ server.listen(8080, function check( err) {
 })
 
 // Handle the file upload request
-server.post('/upload', upload.single('file'), (req, res) => {
+server.post('/upload', authenticate, upload.single('file'), (req, res) => {
     res.send('File uploaded successfully.');
   });
 
@@ -74,7 +90,8 @@ server.post("/api/login/:id", (req, res) => {
                 result = results[0].password
                 const verified = bcrypt.compareSync(password, result);
                 if (verified) {
-                    res.send({status: true, data: results})
+                const token = jwt.sign({ user: results[0].emp_id, user_type: results[0].user_type, photo: results[0].photo, name: results[0].name  }, 'secretKey', { expiresIn });
+                res.send({status: true, token: token})
                 } else {
                     res.send({status: false, message: "Oops! Error occured, Wrong Staff ID or Password"})
                 }   
@@ -90,7 +107,7 @@ server.post("/api/login/:id", (req, res) => {
 
 //PROFILE
 //ChangePassword
-server.put("/api/password/update/:id", (req, res) => {
+server.put("/api/password/update/:id",authenticate, (req, res) => {
     let {newPassword} = req.body
     password = bcrypt.hashSync(newPassword, 10) //encode password
 
@@ -110,7 +127,7 @@ server.put("/api/password/update/:id", (req, res) => {
 
 //DASHBOARD VALUES
 //counting items in tables => emp, user, units, promotions
-server.get("/api/count/users", (req, res) => { //users
+server.get("/api/count/users", authenticate, (req, res) => { //users
     let sql = "SELECT count(*) as count FROM users_table"
     conn.query(sql, function(err, results){
         if(err){
@@ -120,7 +137,7 @@ server.get("/api/count/users", (req, res) => { //users
         }
     })
 })
-server.get("/api/count/emps", (req, res) => { //employees
+server.get("/api/count/emps",authenticate, (req, res) => { //employees
     let sql = "SELECT count(*) as count FROM emp_table"
     conn.query(sql, function(err, results){
         if(err){
@@ -130,7 +147,7 @@ server.get("/api/count/emps", (req, res) => { //employees
         }
     })
 })
-server.get("/api/count/units", (req, res) => { //units
+server.get("/api/count/units",authenticate, (req, res) => { //units
     let sql = "SELECT count(*) as count FROM units_table"
     conn.query(sql, function(err, results){
         if(err){
@@ -140,7 +157,7 @@ server.get("/api/count/units", (req, res) => { //units
         }
     })
 })
-server.get("/api/count/exits", (req, res) => { //exits
+server.get("/api/count/exits",authenticate, (req, res) => { //exits
     let sql = "SELECT count(*) as count FROM exits_table"
     conn.query(sql, function(err, results){
         if(err){
@@ -151,7 +168,7 @@ server.get("/api/count/exits", (req, res) => { //exits
     })
 })
 //chart values
-server.get("/api/chartVal", (req, res) => {
+server.get("/api/chartVal",authenticate, (req, res) => {
     let sql = "SELECT *, (select count(*) from emp_table where unit_id = ut.unit_id) as unitNumber FROM `units_table` ut where ut.unit_id IN (SELECT unit_id from emp_table)"
     conn.query(sql, function(err, results){
         if(err){
@@ -165,7 +182,7 @@ server.get("/api/chartVal", (req, res) => {
 
 //EMPLOYEES
 //Employees data table
-server.get("/api/employees", (req, res) => {
+server.get("/api/employees",authenticate, (req, res) => {
     let sql = "SELECT `id`,`emp_id`,concat(`emp_firstname`, ' ',`emp_middlename`, ' ',`emp_surname`) as 'name',`emp_gender`,`emp_dob`,`emp_email`,`emp_currentgrade`,`emp_dateoffirstappointment`,`emp_dateofpresentappointment`,`emp_highestqualification`,`emp_staffstatus`,`emp_yearswithministry`,`emp_maritalstatus`,`emp_phoneno`,`photo`, (select name from units_table WHERE unit_id = emp.unit_id) as Unit FROM `emp_table` emp;"
     conn.query(sql, function(err, results){
         if(err){
@@ -176,7 +193,7 @@ server.get("/api/employees", (req, res) => {
     })
 })
 //employee record
-server.get("/api/employees/:id", (req, res) => {
+server.get("/api/employees/:id",authenticate, (req, res) => {
     let sql = "SELECT `id`,`emp_id`,`emp_firstname`,`emp_middlename`,`emp_surname`,`emp_gender`,`emp_dob`,`emp_email`,`emp_highestqualification`,`emp_staffstatus`,`emp_yearswithministry`,`emp_maritalstatus`,`emp_phoneno`,`photo`, `unit_id`, (select name from units_table WHERE unit_id = emp.unit_id) as Unit FROM `emp_table` emp WHERE emp.emp_id = '"+req.params.id+"'";
     conn.query(sql, function(err, results){
         if(err){
@@ -187,7 +204,7 @@ server.get("/api/employees/:id", (req, res) => {
     })
 })
 //add new employee
-server.post("/api/employees/add", (req, res) => {
+server.post("/api/employees/add",authenticate, (req, res) => {
     let {emp_id, emp_surname, emp_firstname, emp_middlename, emp_gender, emp_dob, emp_email, emp_highestqualification, emp_staffstatus, emp_yearswithministry, emp_maritalstatus, emp_phoneno, photo, unit_id} = req.body
 
     let sql = "INSERT INTO emp_table (emp_id, emp_surname, emp_firstname, emp_middlename, emp_gender, emp_dob, emp_email, emp_highestqualification, emp_staffstatus, emp_yearswithministry, emp_maritalstatus, emp_phoneno, photo, unit_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?) " 
@@ -200,7 +217,7 @@ server.post("/api/employees/add", (req, res) => {
     })
 })
 //update records
-server.put("/api/employees/update/:id", (req, res) => {
+server.put("/api/employees/update/:id",authenticate, (req, res) => {
     let sql = "UPDATE emp_table SET `emp_id`='" + req.body.emp_id + "',`emp_surname`='" + req.body.emp_surname + "',`emp_firstname`='" + req.body.emp_firstname + "',`emp_middlename`='" + req.body.emp_middlename + "',`emp_gender`='" + req.body.emp_gender + "',`emp_dob`='" + req.body.emp_dob + "',`emp_email`='" + req.body.emp_email + "',`emp_highestqualification`='" + req.body.emp_highestqualification + "',`emp_staffstatus`='" + req.body.emp_staffstatus + "',`emp_yearswithministry`='" + req.body.emp_yearswithministry + "',`emp_maritalstatus`='" + req.body.emp_maritalstatus + "',`emp_phoneno`='" + req.body.emp_phoneno + "',`photo`='" + req.body.photo + "',`unit_id`='" + req.body.unit_id + "' WHERE emp_id ='" +req.params.id +"'";
 
     conn.query(sql, (err, results) => {
@@ -212,7 +229,7 @@ server.put("/api/employees/update/:id", (req, res) => {
     })
 })
 //delete records
-server.delete("/api/employees/delete/:id", (req, res) => {
+server.delete("/api/employees/delete/:id",authenticate, (req, res) => {
     let sql = "DELETE FROM emp_table WHERE emp_id ='" + req.params.id + "'";
     conn.query(sql, (err) => {
         if(err){
@@ -238,7 +255,7 @@ server.delete("/api/employees/delete/:id", (req, res) => {
 
 //UNITS
 //get all records
-server.get("/api/units", (req, res) => {
+server.get("/api/units",authenticate, (req, res) => {
     let sql = "SELECT *, (select count(*) from emp_table where unit_id = ut.unit_id) as unitNumber FROM `units_table` ut"
     conn.query(sql, function(err, results){
         if(err){
@@ -249,7 +266,7 @@ server.get("/api/units", (req, res) => {
     })
 })
 //get record
-server.get("/api/units/:id", (req, res) => {
+server.get("/api/units/:id",authenticate, (req, res) => {
     let sql = "SELECT * FROM `units_table` WHERE unit_id = '"+req.params.id+"'";
     conn.query(sql, function(err, results){
         if(err){
@@ -260,7 +277,7 @@ server.get("/api/units/:id", (req, res) => {
     })
 })
 //add new unit
-server.post("/api/units/add", (req, res) => {
+server.post("/api/units/add",authenticate, (req, res) => {
     let {Name} = req.body
 
     let sql = "INSERT INTO units_table (Name) VALUES (?) " 
@@ -273,7 +290,7 @@ server.post("/api/units/add", (req, res) => {
     })
 })
 //update records
-server.put("/api/units/update/:id", (req, res) => {
+server.put("/api/units/update/:id",authenticate, (req, res) => {
     let sql = "UPDATE units_table SET Name ='" + req.body.Name + "' WHERE unit_id ='" +req.params.id +"'";
 
     conn.query(sql, (err, results) => {
@@ -285,7 +302,7 @@ server.put("/api/units/update/:id", (req, res) => {
     })
 })
 //delete records
-server.delete("/api/units/delete/:id", (req, res) => {
+server.delete("/api/units/delete/:id",authenticate, (req, res) => {
     let sql = "DELETE FROM units_table WHERE unit_id ='" + req.params.id + "'";
     conn.query(sql, (err) => {
         if(err){
@@ -300,7 +317,7 @@ server.delete("/api/units/delete/:id", (req, res) => {
 
 //POSTINGS
 //view records
-server.get("/api/postings", (req, res) => {
+server.get("/api/postings",authenticate, (req, res) => {
     let sql = "SELECT *, (Select concat(emp_firstname, ' ', emp_middlename, ' ', emp_surname) from emp_table  where emp_id = pt.emp_id)as name FROM `postings_table` pt"
     conn.query(sql, function(err, results){
         if(err){
@@ -311,7 +328,7 @@ server.get("/api/postings", (req, res) => {
     })
 })
 //view record
-server.get("/api/postings/:id", (req, res) => {
+server.get("/api/postings/:id",authenticate, (req, res) => {
     let sql = "SELECT *, (Select concat(emp_firstname, ' ', emp_middlename, ' ', emp_surname) from emp_table  where emp_id = pt.emp_id)as name FROM `postings_table` pt WHERE pt.id ="+req.params.id
     conn.query(sql, function(err, results){
         if(err){
@@ -322,7 +339,7 @@ server.get("/api/postings/:id", (req, res) => {
     })
 })
 //add new posting
-server.post("/api/postings/add", (req, res) => {
+server.post("/api/postings/add",authenticate, (req, res) => {
     let {emp_id, post_from, post_to, region, effectiveDate, releaseDate, assumptionDate} = req.body
     let sql = "INSERT INTO postings_table (emp_id, post_from, post_to, region, effectiveDate, releaseDate, assumptionDate) VALUES (?,?,?,?,?,?,?) " 
     conn.query(sql, [emp_id, post_from, post_to, region, effectiveDate, releaseDate, assumptionDate], (err, results) => {
@@ -334,7 +351,7 @@ server.post("/api/postings/add", (req, res) => {
     })
 })
 //update records
-server.put("/api/postings/update/:id", (req, res) => {
+server.put("/api/postings/update/:id",authenticate, (req, res) => {
     let sql = "UPDATE postings_table SET post_from = '" + req.body.post_from + "',post_to= '" + req.body.post_to + "',region= '" + req.body.region + "',effectiveDate= '" + req.body.effectiveDate + "',releaseDate= '" + req.body.releaseDate + "',assumptionDate= '" + req.body.assumptionDate + "' WHERE id ='" +req.params.id +"'";
     console.log(sql)
     conn.query(sql, (err, results) => {
@@ -346,7 +363,7 @@ server.put("/api/postings/update/:id", (req, res) => {
     })
 })
 //delete records
-server.delete("/api/postings/delete/:id", (req, res) => {
+server.delete("/api/postings/delete/:id",authenticate, (req, res) => {
     let sql = "DELETE FROM postings_table WHERE id ='" + req.params.id + "'";
     conn.query(sql, (err) => {
         if(err){
@@ -364,7 +381,7 @@ server.delete("/api/postings/delete/:id", (req, res) => {
 
 //PROMOTIONS
 //view records
-server.get("/api/promotions", (req, res) => {
+server.get("/api/promotions",authenticate, (req, res) => {
     let sql = "SELECT *, (Select concat(emp_firstname, ' ', emp_middlename, ' ', emp_surname) from emp_table where emp_id = pt.emp_id) as name FROM promotions_table pt";
     conn.query(sql, function(err, results){
         if(err){
@@ -380,7 +397,7 @@ server.get("/api/promotions", (req, res) => {
 
 //PROMOTION HISTORY
 //search Promotion
-server.get("/api/promtionsHistory/", (req, res) => {
+server.get("/api/promtionsHistory/",authenticate, (req, res) => {
     let emp_id = req.params.id;
     let sql = "SELECT * FROM promotion_history";
     conn.query(sql, (err, results) => {
@@ -399,7 +416,7 @@ server.get("/api/promtionsHistory/", (req, res) => {
 
 //USERS
 //view records
-server.get("/api/users", (req, res) => {
+server.get("/api/users",authenticate, (req, res) => {
     let sql = "SELECT *, (Select concat(emp_firstname, ' ', emp_middlename, ' ', emp_surname) from emp_table where emp_id = ut.emp_id) as name FROM users_table ut"
     conn.query(sql, function(err, results){
         if(err){
@@ -415,7 +432,7 @@ server.get("/api/users", (req, res) => {
 })
 
 //Users modal employee list
-server.get("/api/usersList", (req, res) => {
+server.get("/api/usersList",authenticate, (req, res) => {
     let sql = "SELECT emp_id, concat(emp_firstname, ' ', emp_middlename, ' ', emp_surname) as name FROM `emp_table` et where et.emp_id NOT IN (select ut.emp_id from users_table ut)"
     conn.query(sql, function(err, results){
         if(err){
@@ -427,7 +444,7 @@ server.get("/api/usersList", (req, res) => {
 })
 
 //insert data
-server.post("/api/users/add", (req, res) => {
+server.post("/api/users/add",authenticate, (req, res) => {
     let {emp_id, password, user_type} = req.body
     password = bcrypt.hashSync(password, 10)
 
@@ -442,7 +459,7 @@ server.post("/api/users/add", (req, res) => {
 })
 
 //search records
-server.get("/api/users/:id", (req, res) => {
+server.get("/api/users/:id",authenticate, (req, res) => {
     let emp_id = req.params.id;
     let sql = "SELECT *, (Select concat(emp_firstname, ' ', emp_middlename, ' ', emp_surname) from emp_table where emp_id = ut.emp_id) as name FROM users_table ut WHERE emp_id = '" + emp_id +"'";
     conn.query(sql, (err, results) => {
@@ -456,7 +473,7 @@ server.get("/api/users/:id", (req, res) => {
 
 
 //update records
-server.put("/api/users/update/:id", (req, res) => {
+server.put("/api/users/update/:id",authenticate, (req, res) => {
     let sql = "UPDATE users_table SET user_type ='" + req.body.user_type + "' WHERE emp_id ='" +req.body.emp_id +"'";
 
     conn.query(sql, (err, results) => {
@@ -469,7 +486,7 @@ server.put("/api/users/update/:id", (req, res) => {
 })
 
 //reset password
-server.put("/api/users/reset/:id", (req, res) => {
+server.put("/api/users/reset/:id",authenticate, (req, res) => {
     password = bcrypt.hashSync('password', 10) //encode password
 
     let sql = "UPDATE users_table SET password ='" + password + "' WHERE emp_id ='" +req.params.id +"'";
@@ -484,7 +501,7 @@ server.put("/api/users/reset/:id", (req, res) => {
 })
 
 //delete records
-server.delete("/api/users/delete/:id", (req, res) => {
+server.delete("/api/users/delete/:id",authenticate, (req, res) => {
     let sql = "DELETE FROM users_table WHERE emp_id ='" + req.params.id + "'";
     conn.query(sql, (err) => {
         if(err){
@@ -494,3 +511,6 @@ server.delete("/api/users/delete/:id", (req, res) => {
         }
     })
 })
+
+
+

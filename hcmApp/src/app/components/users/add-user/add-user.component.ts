@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { HttpService } from 'src/app/services/http.service';
 
 @Component({
   selector: 'app-add-user',
@@ -18,7 +19,7 @@ export class AddUserComponent {
   constructor (private fb: FormBuilder, 
     private modal: NgbModal,
     private router: Router, 
-    private http: HttpClient,
+    private httpService: HttpService,
     private toastr: ToastrService) {
   
 
@@ -40,7 +41,7 @@ export class AddUserComponent {
   submitForm(){
 
     //make http post request
-    this.http.post("http://localhost:8080/api/users/add", this.addUser.value).subscribe((results: any) => {
+    this.httpService.post("http://localhost:8080/api/users/add", this.addUser.value).subscribe((results: any) => {
 
       if(results.status){
         this.toastr.success('User Added Successfully', 'Success!');
@@ -60,7 +61,7 @@ export class AddUserComponent {
   }
 
   getEmpList(){
-    this.http.get("http://localhost:8080/api/usersList").subscribe((results: any) => {
+    this.httpService.get("http://localhost:8080/api/usersList").subscribe((results: any) => {
       this.empList =  results.data
     })
   }

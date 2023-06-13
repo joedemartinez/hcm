@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { HttpService } from 'src/app/services/http.service';
 import { AddUserComponent } from '../add-user/add-user.component';
 import { EditUserComponent } from '../edit-user/edit-user.component';
 
@@ -21,7 +22,7 @@ export class ManageUsersComponent {
   ifMe: any
   
   constructor ( private breadcrumb: BreadcrumbService, private toastr: ToastrService,
-    private http: HttpClient,
+    private httpService: HttpService,
     private modal: NgbModal,
     private router: Router,
     private route: ActivatedRoute) {
@@ -35,7 +36,7 @@ export class ManageUsersComponent {
 
   getUsersDetails(){
     //users
-    this.http.get("http://localhost:8080/api/users").subscribe((results: any) => {
+    this.httpService.get("http://localhost:8080/api/users").subscribe((results: any) => {
       this.usersDetails =  results.data
       setTimeout(()=>{
         $('#usersDataTable').DataTable( {
@@ -73,7 +74,7 @@ export class ManageUsersComponent {
     if(proceed){
       // console.log(id)
       //make http post request
-      this.http.delete("http://localhost:8080/api/users/delete/"+id).subscribe((results: any) => {
+      this.httpService.delete("http://localhost:8080/api/users/delete/"+id).subscribe((results: any) => {
 
         if(results.status){
           this.toastr.success('User Deleted Successfully', 'Success!');
@@ -101,7 +102,7 @@ export class ManageUsersComponent {
     if(proceed){
       // console.log(id)
       //make http post request
-      this.http.put("http://localhost:8080/api/users/reset/"+id, id).subscribe((results: any) => {
+      this.httpService.put("http://localhost:8080/api/users/reset/"+id, id).subscribe((results: any) => {
 
         if(results.status){
           this.toastr.success('User Password Reset Successfully', 'Success!');

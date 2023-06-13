@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { HttpService } from 'src/app/services/http.service';
 import { AddUserComponent } from './add-user/add-user.component';
 
 @Component({
@@ -19,7 +20,7 @@ export class UsersComponent {
   priv:any
   
   constructor ( private breadcrumb: BreadcrumbService, private toastr: ToastrService,
-    private http: HttpClient,
+    private httpService: HttpService,
     private modal: NgbModal,
     private router: Router) {
 
@@ -35,7 +36,7 @@ export class UsersComponent {
 
   getUsersDetails(){
     //users
-    this.http.get("http://localhost:8080/api/users").subscribe((results: any) => {
+    this.httpService.get("http://localhost:8080/api/users").subscribe((results: any) => {
       this.usersDetails =  results.data
       setTimeout(()=>{
         $('#usersDataTable').DataTable( {
@@ -54,7 +55,7 @@ export class UsersComponent {
 
   getEmpList(){
     //users 
-    this.http.get("http://localhost:8080/api/employees").subscribe((results: any) => {
+    this.httpService.get("http://localhost:8080/api/employees").subscribe((results: any) => {
       this.empList =  results.data
       
     })

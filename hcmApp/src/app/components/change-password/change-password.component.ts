@@ -4,6 +4,7 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { HttpService } from 'src/app/services/http.service';
 import { LogoutService } from 'src/app/services/logout.service';
 
 @Component({
@@ -20,7 +21,7 @@ export class ChangePasswordComponent {
   constructor (private fb: FormBuilder, 
     private modal: NgbModal,
     private router: Router, 
-    private http: HttpClient,
+    private httpService: HttpService,
     private toastr: ToastrService,
     private logout: LogoutService) {
   
@@ -61,7 +62,7 @@ export class ChangePasswordComponent {
     this.id = localStorage.getItem('emp_id')
 
     //make http post request
-    this.http.put("http://localhost:8080/api/password/update/"+this.id, this.changePasswordForm.value).subscribe((results: any) => {
+    this.httpService.put("http://localhost:8080/api/password/update/"+this.id, this.changePasswordForm.value).subscribe((results: any) => {
 
       if(results.status){
         this.toastr.success('Password Change Successful. \n Please Log In Again', 'Success!');

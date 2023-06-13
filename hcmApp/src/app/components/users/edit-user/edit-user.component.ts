@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { HttpService } from 'src/app/services/http.service';
 
 @Component({
   selector: 'app-edit-user',
@@ -19,7 +20,7 @@ export class EditUserComponent {
   constructor (private fb: FormBuilder, 
     private modal: NgbModal,
     private router: Router, 
-    private http: HttpClient,
+    private httpService: HttpService,
     private toastr: ToastrService,
     private route: ActivatedRoute) {
   
@@ -34,24 +35,12 @@ export class EditUserComponent {
     this.route.queryParams.subscribe(params => {
       this.id = params['id'];// geting id
     })
-
-  //  if (this.id) {
-  //   this.http.get("http://localhost:8080/api/users/"+this.id).subscribe((results: any) => {
-  //      this.empList = results.data//setting result to modalData variable
-  //      console.log(this.empList)
-  //      //set validations
-  //      this.addUser = this.fb.group({
-  //       emp_id: [this.empList[0].emp_id, [Validators.required]],
-  //       user_type: [this.empList[0].user_type, [Validators.required]]
-  //      })
-  //    })
-  //  } 
   }
   
 
   ngOnInit(){
     if (this.id) {
-      this.http.get("http://localhost:8080/api/users/"+this.id).subscribe((results: any) => {
+      this.httpService.get("http://localhost:8080/api/users/"+this.id).subscribe((results: any) => {
          this.empList = results.data//setting result to modalData variable
         //  console.log(this.empList)
          //set validations
@@ -67,7 +56,7 @@ export class EditUserComponent {
   submitForm(){
 
     //make http post request
-    this.http.put("http://localhost:8080/api/users/update/"+this.id, this.addUser.value).subscribe((results: any) => {
+    this.httpService.put("http://localhost:8080/api/users/update/"+this.id, this.addUser.value).subscribe((results: any) => {
 
       if(results.status){
         this.toastr.success('User Updated Successfully', 'Success!');

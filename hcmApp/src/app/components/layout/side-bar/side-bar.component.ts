@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { HttpService } from 'src/app/services/http.service';
 import { LogoutService } from 'src/app/services/logout.service';
 
 @Component({
@@ -11,23 +12,30 @@ export class SideBarComponent {
   emp: any
   emp_name:any
   photo:any
+  token:any
 
-  constructor ( private http: HttpClient,
+  constructor ( private httpService: HttpService,
     private logout: LogoutService) {
     this.getEmpVal()
   }
 
   ngOnInit(){
     // Read the initial value from local storage
-    this.emp_name = localStorage.getItem('name');
-    this.photo = localStorage.getItem('photo')
+    this.token = localStorage.getItem('jwt');
+    //get token values
+    const parts = this.token.split('.');
+    // Decode the base64-encoded payload
+    const payload = JSON.parse(atob(parts[1]))
+
+    this.emp_name = payload.name;
+    this.photo = payload.photo
   }
 
-  getEmpVal(){
+  getEmpVal(){ 
     //Emp
     
-    this.http.get("http://localhost:8080/api/count/emps").subscribe((results: any) => {
-      this.emp =  results.data[0]['count']
+    this.httpService.get("http://localhost:8080/api/count/emps").subscribe((results: any) => {
+      this.emp =  results.data[0]['count'] 
     })
   }
 
