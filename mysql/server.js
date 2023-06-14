@@ -7,6 +7,8 @@ const server = express()
 server.use(bodyParser.json()) 
 server.use(cors()) //CORS policy: No 'Access-Control-Allow-Origin' 
 const bcrypt = require('bcryptjs'); //password hashing
+require('dotenv').config();//dotenv
+console.log(process.env.JWT_SECRET)
 
 // //JSON WEB TOKEN
 const jwt = require('jsonwebtoken');
@@ -21,7 +23,7 @@ function authenticate(req, res, next) {
     const token = req.headers.authorization.split(' ')[1];
 
     try {
-        const decoded = jwt.verify(token, 'secretKey');
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.emp_id = decoded.emp_id; // Store the user ID in the request object for future use
         next(); // Proceed to the next middleware or route handler
     } catch (error) {
@@ -95,7 +97,7 @@ server.post("/api/login/:id", (req, res) => {
                 result = results[0].password
                 const verified = bcrypt.compareSync(password, result);
                 if (verified) {
-                const token = jwt.sign({ user: results[0].emp_id, user_type: results[0].user_type, photo: results[0].photo, name: results[0].name  }, 'secretKey', { expiresIn });
+                const token = jwt.sign({ user: results[0].emp_id, user_type: results[0].user_type, photo: results[0].photo, name: results[0].name  }, process.env.JWT_SECRET, { expiresIn });
                 res.send({status: true, token: token})
                 } else {
                     res.send({status: false, message: "Oops! Error occured, Wrong Staff ID or Password"})
