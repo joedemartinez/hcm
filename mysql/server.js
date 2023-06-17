@@ -7,8 +7,7 @@ const server = express()
 server.use(bodyParser.json()) 
 server.use(cors()) //CORS policy: No 'Access-Control-Allow-Origin' 
 const bcrypt = require('bcryptjs'); //password hashing
-require('dotenv').config();//dotenv
-console.log(process.env.JWT_SECRET)
+require('dotenv').config();//dotenvß
 
 // //JSON WEB TOKEN
 const jwt = require('jsonwebtoken');
@@ -64,7 +63,7 @@ conn.connect(function (err) {
 })
 
 //port listening
-server.listen(8080, function check( err) {
+server.listen(8080 || process.env.PORT, function check( err) {
     if(err){
         console.log("Oops!! Error Occured")
     }else{
